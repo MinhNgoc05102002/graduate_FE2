@@ -11,11 +11,11 @@ import BoxAccount from "./BoxAccount";
 
 // truyền username của user đang đăng nhập vào đây
 export default function ListMember(props:any) {
-    const {username} = props;
+    const {username, setIsLoading} = props;
 
     const userData = useAppSelector(inforUser);
     const [listAccount, setListAccount] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [pageIndex, setPageIndex] = useState(1);
     const [totalPage, setToTalPage] = useState(1);
@@ -71,7 +71,6 @@ export default function ListMember(props:any) {
 
     return (
         <>
-            <Loading isLoading={isLoading}/>
             <ToastContainer />
 
             <div className={` ${styles.search_container} d-flex justify-content-between row g-0 mb-5`}>

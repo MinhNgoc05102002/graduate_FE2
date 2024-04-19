@@ -163,7 +163,7 @@ export default function Account() {
 
 
                 <div>
-                    {content.component ? <content.component username={currentUser.username} showTime={true} type="ACCOUNT"/> : null}
+                    {content.component ? <content.component username={currentUser.username} showTime={true} type="ACCOUNT" setIsLoading={setIsLoading}/> : null}
                 </div>
 
 

@@ -1,17 +1,18 @@
 import CanvasJSReact from "@canvasjs/react-charts";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import ReactFlipCard from 'reactjs-flip-card'
+import ReactFlipCard from 'reactjs-flip-card';
 import Loading, { PopupMenu } from "~/components/Loading/Index";
+import styles from "~/pages/credit/Credit.module.scss";
 import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
 import { BASE_URL_MEDIA, Post } from "~/services/axios";
 import { ICredit } from "~/types/ICredit";
 import { CheckResponseSuccess, GetIdFromCurrentPage, findNotifDate } from "~/utils/common";
-import styles from "~/pages/credit/Credit.module.scss";
 
 // import required modules
 import LinearProgress from "@mui/material/LinearProgress";
+import MenuItem from '@mui/material/MenuItem';
 import Tooltip from "@mui/material/Tooltip";
 import 'animate.css';
 import { Link, useNavigate } from "react-router-dom";
@@ -19,9 +20,6 @@ import Swal from 'sweetalert2';
 import ListCard from "~/components/Credit/Detail";
 import { IFlashcard } from "~/types/IFlash";
 import NotFound from "../notfound/NotFound";
-import SimpleListMenu from "~/components/Credit/Memory";
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
 
@@ -355,6 +353,48 @@ export default function Credit() {
         setIsLoading(false);
     }
 
+    const handleDelete = async () => {
+        Swal.fire({
+            title: "Bạn chắc chắn xóa bộ thẻ này?",
+            text: "Hành động này sẽ không thể hoàn tác!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Hủy",
+            confirmButtonText: "Tiếp tục"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                // call api delete
+                // setIsLoading(true);
+                await Post(
+                    "/api/Credit/delete-credit",
+                    {
+                        creditId: credit?.creditId
+                    },
+                ).then((res) => {
+                    if (CheckResponseSuccess(res)) {
+                        // setIsLoading(false);
+                        Swal.fire({
+                            title: "Đã xóa thành công!",
+                            icon: "success",
+                            timer: 700,
+                        });
+                        navigate(-1)
+                    }
+                    else {
+                        toast.error("Đã có lỗi xảy ra.");
+                    }
+                })
+                .catch((err) => {
+                    toast.error("Đã có lỗi xảy ra.");
+                    console.log(err);
+                })
+                // setIsLoading(false);
+            }
+        });
+    }
+
     const handleSpeak = (text:string) => {
         let utterance = new SpeechSynthesisUtterance(text);
 
@@ -426,6 +466,8 @@ export default function Credit() {
             // ]
         }]
     }
+
+    
 
     if (!credit) {
         return (
@@ -585,20 +627,24 @@ export default function Credit() {
                         <span className='bx bxs-share-alt' onClick={() => {navigator.clipboard.writeText(window?.location?.toString()); toast.success('Đã sao chép vào bảng nhớ tạm')}}></span>
                     </Tooltip>
                     <Tooltip title="Chỉnh sửa" placement="top" arrow>
-                        <span className='bx bxs-pencil'></span>
+                        <span className='bx bxs-pencil' onClick={() => navigate(`/create-credit/${credit.creditId}`)}></span>
                     </Tooltip>
-                    <Tooltip title="Xóa, Sao chép, ..." placement="top" arrow>
+                    {/* <Tooltip title="Xóa, Sao chép, ..." placement="top" arrow> */}
                         <PopupMenu 
                             renderBtn={(handleClick:any) => (
                                 <span id="demo-positioned-button" onClick={handleClick} className='bx bx-dots-horizontal-rounded'></span>
                             )}
-                            renderItem={() => (
+                            renderItem={(handleClose:any) => (
                                 <div>
                                     <MenuItem className="menu_item">
                                         <span className='bx bx-copy-alt icon'></span>
                                         Tạo bản sao
                                     </MenuItem>
-                                    <MenuItem className="menu_item">
+                                    <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
+                                        <span className='bx bx-message-square-error icon'></span>
+                                        Báo cáo bộ thẻ 
+                                    </MenuItem>
+                                    <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
                                         <span className='bx bx-trash icon'></span>
                                         Xóa bộ thẻ 
                                     </MenuItem>
@@ -606,7 +652,7 @@ export default function Credit() {
                             )}
                         />
                         
-                    </Tooltip>
+                    {/* </Tooltip> */}
                 </div> : 
                 <div className={styles.learn_btn}>
                     <button type="button" className="btn btn-primary" onClick={() => handleStartLearn()}>Học bộ thẻ này</button>

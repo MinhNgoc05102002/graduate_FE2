@@ -39,7 +39,7 @@ const INIT_VALUE = {
     description: "",
     flashcardDTOs: [
         {
-            flashcardId: "",
+            flashcardId: null,
             question: "",
             answer: "",
             answerLang: "",
@@ -48,7 +48,7 @@ const INIT_VALUE = {
             imageFile: null,
         },
         {
-            flashcardId: "",
+            flashcardId: null,
             question: "",
             answer: "",
             answerLang: "",
@@ -57,7 +57,7 @@ const INIT_VALUE = {
             imageFile: null,
         },
         {
-            flashcardId: "",
+            flashcardId: null,
             question: "",
             answer: "",
             answerLang: "",
@@ -66,7 +66,7 @@ const INIT_VALUE = {
             imageFile: null,
         },
         {
-            flashcardId: "",
+            flashcardId: null,
             question: "",
             answer: "",
             answerLang: "",
@@ -75,7 +75,7 @@ const INIT_VALUE = {
             imageFile: null,
         },
         {
-            flashcardId: "",
+            flashcardId: null,
             question: "",
             answer: "",
             answerLang: "",
@@ -310,7 +310,6 @@ export default function CreateCredit() {
         })
 
         data.flashcardDTOs = listFlashcard;
-
         const formData = new FormData();
         formData.append('creditReqDTO[name]', data.name);
         formData.append('creditReqDTO[description]', data.description);
@@ -319,6 +318,8 @@ export default function CreateCredit() {
         })
 
         listFlashcard.forEach((card:any, index:number) => {
+            formData.append(`creditReqDTO[flashcardDTOs][${index}][orderIndex]`, String(index))
+            formData.append(`creditReqDTO[flashcardDTOs][${index}][flashcardId]`, card.flashcardId ?? '')
             formData.append(`creditReqDTO[flashcardDTOs][${index}][question]`, card.question)
             formData.append(`creditReqDTO[flashcardDTOs][${index}][answer]`, card.answer)
             formData.append(`creditReqDTO[flashcardDTOs][${index}][answerLang]`, card.answerLang)
@@ -331,8 +332,7 @@ export default function CreateCredit() {
         });
         
         if (id) {
-            console.log('here');
-        
+            formData.append('creditReqDTO[creditId]', id);
             await fetchAPIEdit(formData);
         } 
         else {
@@ -395,7 +395,7 @@ export default function CreateCredit() {
                     showConfirmButton: false,
                     timer: 600,
                   });
-                navigate(`/credit/${creditId}`);
+                navigate(`/credit/${id}`);
             }
             else {
                 toast.error("Đã có lỗi xảy ra.");
@@ -409,7 +409,7 @@ export default function CreateCredit() {
 
     const handleAppend = () => {
         append({
-            flashcardId: "",
+            flashcardId: null,
             question: "",
             answer: "",
             answerLang: "",

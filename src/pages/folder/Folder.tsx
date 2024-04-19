@@ -116,6 +116,7 @@ export default function Folder() {
         setIsLoading(false);
     };
 
+    // chưa search được
     const handleSearch = (e: any = null) => {
         setPageIndex(1)
         e?.preventDefault();
@@ -250,9 +251,10 @@ export default function Folder() {
                     </div>
 
                     <div className={styles.btn}>
-                        <Tooltip title="Chia sẻ" placement="top" arrow>
+                        {/* Folder ko có chia sẻ  */}
+                        {/* <Tooltip title="Chia sẻ" placement="top" arrow>
                             <span className='bx bxs-share-alt'></span>
-                        </Tooltip>
+                        </Tooltip> */}
                         <Tooltip onClick={() => setOpen(true)} title="Thêm bộ thẻ" placement="top" arrow>
                             <span className='bx bx-list-plus'></span>
                         </Tooltip>
@@ -373,7 +375,7 @@ export default function Folder() {
                                 let checked = listCredit.some((item) => item.creditId == credit.creditId)
                                 return (
                                     <div key={credit.creditId}>
-                                        <BoxCreditInModal credit={credit} callBackCheck={handleCheckInModal} checked={checked}/>
+                                        <BoxCreditInModal data={credit} callBackCheck={handleCheckInModal} checked={checked}/>
                                     </div>)
                             })}
                         </div>
@@ -406,9 +408,12 @@ export default function Folder() {
 
 
                     <DialogActions>
-                        <Button autoFocus onClick={() => handleSubmit()}>
+                        <button type="button" className={`btn btn-primary`} onClick={() => handleSubmit()}>
                             Lưu
-                        </Button>
+                        </button>
+                        {/* <Button autoFocus >
+                            Lưu
+                        </Button> */}
                     </DialogActions>
                 </BootstrapDialog>
 

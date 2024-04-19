@@ -1,3 +1,5 @@
+import { IFolder } from "./IFolder"
+
 export interface ICredit {
     avatar: string
     categories: any
@@ -17,7 +19,7 @@ export interface ICredit {
 }
 
 export interface IPropsModal {
-    credit: ICredit;
+    data: any;
     callBackCheck:any;
     checked: boolean;
 }

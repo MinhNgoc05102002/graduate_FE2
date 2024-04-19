@@ -99,7 +99,7 @@ export default function Sidebar() {
                 <ul id="scroll_menu" className="menu-inner py-1" style={{maxHeight: '100vh'}}>
                     {/* <!-- Dashboard --> */}
                     <li className={`menu-item ${openSidebar == 'HOME' ? 'active': ''}`}>
-                        <Link to="/" className="menu-link" onClick={() => setOpenSidebar('HOME')}>
+                        <Link to="/" className="menu-link" onClick={() => {setOpenSidebar('HOME'); setActiveTab('none'); setOpenItem('');}}>
                             <i className="menu-icon tf-icons bx bx-home-circle"></i>
                             <div data-i18n="Analytics">Trang chủ</div>
                         </Link>
@@ -107,16 +107,34 @@ export default function Sidebar() {
 
                     {/* <!-- Tìm kiếm --> */}
                     <li className={`menu-item ${openSidebar == 'SEARCH' ? 'active': ''}`}>
-                        <Link to="/search" className="menu-link" onClick={() => setOpenSidebar('SEARCH')}>
+                        <Link to="/search" className="menu-link" onClick={() => {setOpenSidebar('SEARCH'); setActiveTab('none'); setOpenItem('');}}>
                             <i className="menu-icon tf-icons bx bx-layout"></i>
                             <div data-i18n="Layouts">Tìm kiếm</div>
                         </Link>
                     </li>
 
                     <li className="menu-header small text-uppercase">
-                        <span className="menu-header-text">Thư viện của bạn</span>
+                        <span className="menu-header-text">Thêm mới</span>
                     </li>
-                    <li className={`menu-item ${openItem == 'CREDIT' ? 'open': ''} ${openSidebar == 'CREDIT' ? 'active': ''}`}>
+                    <li className={`menu-item ${openSidebar == 'CREDIT' ? 'active': ''}`}>
+                        <Link to="/create-credit" className="menu-link" onClick={(e) =>  setOpenSidebar('CREDIT')}>
+                            <i className="menu-icon tf-icons bx bx-collection"></i>
+                            <div data-i18n="Layouts">Bộ thẻ ghi nhớ</div>
+                        </Link>
+                    </li>
+                    <li className={`menu-item ${openSidebar == 'FOLDER' ? 'active': ''}`}>
+                        <Link to={`/create-folder`} className="menu-link" onClick={(e) =>  setOpenSidebar('FOLDER')}>
+                            <i className='menu-icon tf-icons bx bx-folder' ></i>
+                            <div data-i18n="Layouts">Thư mục</div>
+                        </Link>
+                    </li>
+                    <li className={`menu-item ${openSidebar == 'CLASS' ? 'active': ''}`}>
+                        <Link to={`/create-class`} className="menu-link" onClick={(e) =>  setOpenSidebar('CLASS')}>
+                            <i className="menu-icon tf-icons bx bx-cube-alt"></i>
+                            <div data-i18n="Layouts">Lớp học</div>
+                        </Link>
+                    </li>
+                    {/* <li className={`menu-item ${openItem == 'CREDIT' ? 'open': ''} ${openSidebar == 'CREDIT' ? 'active': ''}`}>
                         <a href="#" onClick={(e) => {e.preventDefault(); setOpenItem('CREDIT'); setOpenSidebar('CREDIT')}} className="menu-link menu-toggle">
                             <i className="menu-icon tf-icons bx bx-collection"></i>
                             <div data-i18n="Account Settings">Bộ thẻ ghi nhớ</div>
@@ -132,11 +150,6 @@ export default function Sidebar() {
                                     <div data-i18n="Notifications">Xem tất cả bộ thẻ</div>
                                 </Link>
                             </li>
-                            {/* <li className="menu-item">
-                                <a href="pages-account-settings-connections.html" className="menu-link">
-                                    <div data-i18n="Connections">Connections</div>
-                                </a>
-                            </li> */}
                         </ul>
                     </li>
                     <li className={`menu-item ${openItem == 'FOLDER' ? 'open': ''} ${openSidebar == 'FOLDER' ? 'active': ''}`}>
@@ -164,7 +177,7 @@ export default function Sidebar() {
                         </a>
                         <ul className="menu-sub">
                             <li className={`menu-item ${activeTab == 'CREATE_CLASS' ? 'active': ''}`}>
-                                <Link to={`/maintain`} className="menu-link" onClick={() => setActiveTab('CREATE_CLASS')}>
+                                <Link to={`/create-class`} className="menu-link" onClick={() => setActiveTab('CREATE_CLASS')}>
                                     <div data-i18n="Error">Thêm mới</div>
                                 </Link>
                             </li>
@@ -174,14 +187,14 @@ export default function Sidebar() {
                                 </Link>
                             </li>
                         </ul>
-                    </li>
+                    </li> */}
                     {/* <!-- Components --> */}
                     <li className="menu-header small text-uppercase">
                         <span className="menu-header-text">Tài khoản</span>
                     </li>
                     {/* <!-- User interface --> */}
                     <li className={`menu-item ${openSidebar == 'ACCOUNT' ? 'active': ''}`}>
-                        <Link to='/maintain' className="menu-link" onClick={() => setOpenSidebar('ACCOUNT')}>
+                        <Link to={`/account/${userData?.username}`} className="menu-link" onClick={() => {setOpenSidebar('ACCOUNT'); setActiveTab('none'); setOpenItem('');}}>
                             <i className="menu-icon tf-icons bx bx-box"></i>
                             <div data-i18n="User interface">Trang cá nhân</div>
                         </Link>
@@ -189,7 +202,7 @@ export default function Sidebar() {
 
                     {/* <!-- Extended components --> */}
                     <li className={`menu-item ${openSidebar == 'SETTING' ? 'active': ''}`}>
-                        <Link to="/maintain" className="menu-link" onClick={() => setOpenSidebar('SETTING')}>
+                        <Link to="/setting" className="menu-link" onClick={() => {setOpenSidebar('SETTING'); setActiveTab('none'); setOpenItem('');}}>
                             <i className='menu-icon tf-icons bx bx-cog'></i>
                             <div data-i18n="Extended UI">Cài đặt</div>
                         </Link>

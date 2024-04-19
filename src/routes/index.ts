@@ -5,13 +5,15 @@ import Account from "~/pages/account"
 import Credit from "~/pages/credit/Credit"
 import Dashboard from "~/pages/dashboard"
 import Folder from "~/pages/folder/Folder"
-import Class from "~/pages/class/Class"
+import Classes from "~/pages/class/Class"
 import Register from "~/pages/register/index"
 import CreateCredit from "~/pages/create-credit/CreateCredit"
 import Maintain from "~/pages/maintain/Maintain"
 import CreateFolder from "~/pages/create-folder/CreateFolder"
 import Learn from "~/pages/learn/Learn"
 import Search from "~/pages/search/Search"
+import CreateClass from "~/pages/create-class/CreateClass"
+import Setting from "~/pages/settingpage/Setting"
 
 export const PUBLIC_ROUTER = [
     {
@@ -70,7 +72,7 @@ export const PRIVATE_ROUTER = [
     },
     {
         path:"/class/:id",
-        page: Class,
+        page: Classes,
         layout: DefaultLayout
     },
     {
@@ -94,6 +96,16 @@ export const PRIVATE_ROUTER = [
         layout: DefaultLayout
     },
     {
+        path:"/create-class",
+        page: CreateClass,
+        layout: DefaultLayout
+    },
+    {
+        path:"/create-class/:id",
+        page: CreateClass,
+        layout: DefaultLayout
+    },
+    {
         path:"/learn/:id",
         page: Learn,
         layout: null
@@ -106,6 +118,11 @@ export const PRIVATE_ROUTER = [
     {
         path:"/search",
         page: Search,
+        layout: DefaultLayout
+    },
+    {
+        path:"/setting",
+        page: Setting,
         layout: DefaultLayout
     },
     {

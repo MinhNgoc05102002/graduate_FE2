@@ -10,10 +10,10 @@ import BoxFolderAccount from "./Box/BoxFolderAccount";
 
 // truyền username của user đang đăng nhập vào đây
 export default function ListFolder(props:any) {
-    const {username, type = "ACCOUNT"} = props
+    const {username, type = "ACCOUNT", setIsLoading, reload, setReload} = props
     const userData = useAppSelector(inforUser);
     const [listFolder, setListFolder] = useState<IFolder[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState("");
     
     useEffect(() => {
@@ -21,6 +21,13 @@ export default function ListFolder(props:any) {
             getFolder();
         }
     }, [userData?.token, username])
+
+    useEffect(() => {
+        if (reload == true) {
+            getFolder();
+            setReload(false);
+        }
+    }, [reload])
 
     const getFolder = async () => {
         setIsLoading(true);
@@ -91,7 +98,6 @@ export default function ListFolder(props:any) {
 
     return (
         <>
-            <Loading isLoading={isLoading}/>
             <ToastContainer />
 
             <div className="mt-5">

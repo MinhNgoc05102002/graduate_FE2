@@ -10,15 +10,18 @@ import Loading from '~/components/Loading/Index';
 import { Post } from '~/services/axios';
 import { CheckResponseSuccess } from '~/utils/common';
 import NotFound from '../notfound/NotFound';
-import styles from './CreateFolder.module.scss';
+import styles from './CreateClass.module.scss';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const INIT_VALUE = {
     name: "",
-    description: ""
+    description: "",
+    acceptEdit: false
 }
 
 
-export default function CreateFolder() {
+export default function CreateClass() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
@@ -26,13 +29,14 @@ export default function CreateFolder() {
 
     useEffect(() => {
         if(id) {
-            getInfoFolder(id);
+            getInfoClass(id);
         }
     }, [id]);
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required('Hãy nhập tên thư mục').max(100, 'Tên thư mục không được vượt quá 100 kí tự'),
-        description: Yup.string().required('Hãy nhập mô tả của thư mục').max(2000, 'Mô tả không được vượt quá 2000 kí tự'),
+        name: Yup.string().required('Hãy nhập tên lớp học').max(100, 'Tên lớp học không được vượt quá 100 kí tự'),
+        description: Yup.string().required('Hãy nhập mô tả của lớp học').max(2000, 'Mô tả không được vượt quá 2000 kí tự'),
+        acceptEdit: Yup.boolean()
     });
 
     const {
@@ -49,23 +53,27 @@ export default function CreateFolder() {
         mode: "onChange",
         resolver: yupResolver(validationSchema)
       });
+    
+      const watchCheck = watch('acceptEdit')
 
     const onSubmit = async (data:any) => {
         setIsLoading(true);
 
+        console.log(data);
+
         await Post(
-            "/api/Folder/create-folder", 
+            "/api/Class/create-class", 
             data,
         ).then(async (res) => {
             if(CheckResponseSuccess(res)) {
-                let creditId = res?.returnObj;
+                let classId = res?.returnObj;
                 Swal.fire({
                     icon: "success",
-                    title: "Tạo thư mục thành công",
+                    title: "Tạo lớp học thành công",
                     showConfirmButton: false,
                     timer: 600,
                   });
-                navigate(`/folder/${creditId}`);
+                navigate(`/class/${classId}`);
             }
             else {
                 toast.error("Đã có lỗi xảy ra.");
@@ -84,21 +92,21 @@ export default function CreateFolder() {
         setIsLoading(true);
 
         await Post(
-            "/api/Folder/edit-folder", 
+            "/api/Class/edit-class", 
             {
                 ...data,
-                folderId: id
+                classId: id
             },
         ).then(async (res) => {
             if(CheckResponseSuccess(res)) {
                 // let creditId = res?.returnObj;
                 Swal.fire({
                     icon: "success",
-                    title: "Cập nhật thư mục thành công",
+                    title: "Cập nhật lớp học thành công",
                     showConfirmButton: false,
                     timer: 600,
                   });
-                navigate(`/folder/${id}`);
+                navigate(`/class/${id}`);
             }
             else {
                 toast.error("Đã có lỗi xảy ra.");
@@ -113,22 +121,26 @@ export default function CreateFolder() {
         
       };
 
-    const getInfoFolder = async (folderId:string) => {
+    const getInfoClass = async (classId:string) => {
         setIsLoading(true);
         await Post(
-            "/api/Folder/get-folder-by-id",
+            "/api/Class/get-class-by-id", 
+            classId, 
             {
-                pageSize: 5,
-                pageIndex: 0,
-                containerId: folderId
-            },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            // userData?.token ?? ""
         ).then((res) => {
             if (CheckResponseSuccess(res)) {
-                let folder = res?.returnObj;
-                if (folder) {
+                let _class = res?.returnObj;
+                if (_class) {
                     setIsEdit(true);
-                    setValue('description', folder.description);
-                    setValue('name', folder.name);
+                    setValue('description', _class.description);
+                    setValue('name', _class.name);
+                    setValue('acceptEdit', _class.acceptEdit);
+                    console.log(getValues('acceptEdit'), _class.acceptEdit)
                 }
                 else {
                     setIsEdit(false);
@@ -159,7 +171,7 @@ export default function CreateFolder() {
             <div className={`container-xxl flex-grow-1 container-p-y px-5`}>
                 <div className={styles.title}>
                     <h4 className={styles.name}>
-                        {isEdit ? 'Cập nhật thư mục' : 'Tạo thư mục mới'}
+                        {isEdit ? 'Cập nhật lớp học' : 'Tạo lớp học mới'}
                     </h4>
                     <div className="d-flex justify-content-sm-end">
                         {isEdit ?
@@ -179,7 +191,7 @@ export default function CreateFolder() {
                                 required
                                 id="name"
                                 // name="loginName"
-                                label="Nhập tên thư mục"
+                                label="Nhập tên lớp học"
                                 fullWidth
                                 margin="dense"
                                 variant="outlined" 
@@ -205,6 +217,18 @@ export default function CreateFolder() {
                                 error={errors.description ? true : false}
                                 helperText={errors.description ? errors.description?.message : ""}
                             />
+
+                            <div className="input_checkbox">
+                                <FormControlLabel
+                                    label="Cho phép các thành viên trong lớp thêm và bỏ học phần, thư mục"
+                                    control={
+                                        <Checkbox
+                                            checked={watchCheck}
+                                            {...register('acceptEdit')}
+                                        />
+                                    }
+                                />
+                            </div>
                         </div>
 
                     </div>

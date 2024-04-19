@@ -64,12 +64,12 @@ function showDate(date_notified = "2021-11-05 15:00:00") {
 }
 
 // truyền username của user đang đăng nhập vào đây
-export default function ListCredit(props:{username:string|undefined, showTime: boolean, type:string}) {
-    const {username, showTime, type = "ACCOUNT"} = props;
+export default function ListCredit(props:any) {
+    let {username, showTime, type = "ACCOUNT", setIsLoading, reload, setReload} = props;
 
     const userData = useAppSelector(inforUser);
     const [listCredit, setListCredit] = useState<ICredit[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [pageIndex, setPageIndex] = useState(1);
     const [totalPage, setToTalPage] = useState(1);
@@ -79,6 +79,13 @@ export default function ListCredit(props:{username:string|undefined, showTime: b
             getListCredit();
         }
     }, [userData?.token, username, pageIndex])
+
+    useEffect(() => {
+        if (reload == true) {
+            getListCredit();
+            setReload(false);
+        }
+    }, [reload])
 
     const getListCredit = async () => {
         // dispatch(login(formLogin))
@@ -136,7 +143,6 @@ export default function ListCredit(props:{username:string|undefined, showTime: b
 
     return (
         <>
-            <Loading isLoading={isLoading}/>
             <ToastContainer />
             <div className={` ${styles.search_container} d-flex justify-content-between row g-0 mb-5`}>
                 <div className="combobox col-8">
@@ -177,29 +183,31 @@ export default function ListCredit(props:{username:string|undefined, showTime: b
                 </div>)
             })}
             
-            <nav aria-label="Page navigation">
-                <ul className="pagination justify-content-center mt-4">
-                <li className="page-item prev">
-                    <a onClick={() => handleNextPage(-1)} className={`page-link fw-semibold ${styles.arrow} ${pageIndex > 1 ? styles.active : null}`}>
-                        <i className="tf-icon bx bx-chevron-left"></i>
-                        <span>Trước</span>
-                    </a>
-                </li>
-                {/* <li className="page-item active">
-                    <a className="page-link">Trang 2 / 3</a>
-                </li> */}
-                <li className="page-item">
-                    <a className={`page-link fw-semibold ${styles.page_size} `}>
-                        Trang {pageIndex} / {totalPage}
-                    </a>
-                </li>
-                <li className="page-item next">
-                    <a onClick={() => handleNextPage(1)} className={`page-link fw-semibold ${styles.arrow} ${pageIndex < totalPage ? styles.active : null}`}>
-                        <span>Tiếp</span>
-                        <i className="tf-icon bx bx-chevron-right"></i>
-                    </a>
-                </li>
-                </ul>
-            </nav>
+            {listCredit?.length == 0 && type == "CLASS" ? null :
+                <nav aria-label="Page navigation">
+                    <ul className="pagination justify-content-center mt-4">
+                    <li className="page-item prev">
+                        <a onClick={() => handleNextPage(-1)} className={`page-link fw-semibold ${styles.arrow} ${pageIndex > 1 ? styles.active : null}`}>
+                            <i className="tf-icon bx bx-chevron-left"></i>
+                            <span>Trước</span>
+                        </a>
+                    </li>
+                    {/* <li className="page-item active">
+                        <a className="page-link">Trang 2 / 3</a>
+                    </li> */}
+                    <li className="page-item">
+                        <a className={`page-link fw-semibold ${styles.page_size} `}>
+                            Trang {pageIndex} / {totalPage}
+                        </a>
+                    </li>
+                    <li className="page-item next">
+                        <a onClick={() => handleNextPage(1)} className={`page-link fw-semibold ${styles.arrow} ${pageIndex < totalPage ? styles.active : null}`}>
+                            <span>Tiếp</span>
+                            <i className="tf-icon bx bx-chevron-right"></i>
+                        </a>
+                    </li>
+                    </ul>
+                </nav>
+            }
         </>)
 };
