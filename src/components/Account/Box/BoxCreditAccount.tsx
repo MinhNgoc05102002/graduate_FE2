@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { IProps } from "~/types/ICredit";
 import styles from "~/pages/account/Account.module.scss";
+import { BASE_URL_MEDIA } from "~/services/axios";
 
 export default function BoxCreditAccount(props:IProps) {
     const credit = props.credit;
@@ -14,7 +15,7 @@ export default function BoxCreditAccount(props:IProps) {
                 <div className={`${styles.divider}`}></div>
                 <div className="mx-1 flex-shrink-0">
                     <Link to={`/account/${credit?.createdBy}`} className="avatar align-items-center d-flex w-auto">
-                        <img src={credit?.avatar} className="w-px-20 h-auto rounded-circle" />
+                        <img src={BASE_URL_MEDIA + '/' + credit?.avatar} className="w-px-20 h-px-20 rounded-circle" />
                     </Link>
                 </div>
                 <Link to={`/account/${credit?.createdBy}`} className="text-color align-items-center d-flex">

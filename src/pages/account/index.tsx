@@ -5,7 +5,7 @@ import ListCredit from "~/components/Account/ListCredit";
 import { CheckResponseSuccess, GetIdFromCurrentPage, GetPreIdFromCurrentPage } from "~/utils/common";
 import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
-import { Post } from "~/services/axios";
+import { BASE_URL_MEDIA, Post } from "~/services/axios";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import NotFound from "../notfound/NotFound";
@@ -117,7 +117,7 @@ export default function Account() {
                         {/* Avatar */}
                         <div className="col-md-1 col-lg-1 col-sm-2 col-3">
                             <div className={`avatar ${styles.avatar_box}`}>
-                                <img src={currentUser.avatar} className="w-px-75 h-auto rounded-circle" />
+                                <img src={BASE_URL_MEDIA + '/' + currentUser.avatar} className="w-px-75 h-px-75 rounded-circle" />
                             </div>
                         </div>
                         {/* Username */}

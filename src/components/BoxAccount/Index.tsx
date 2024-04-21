@@ -1,6 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./BoxAccount.module.scss";
 import { Link } from "react-router-dom";
+import { BASE_URL_MEDIA } from "~/services/axios";
 
 /**
  * Box Account Dashboard
@@ -16,7 +17,7 @@ export default function BoxAccount(props:any) {
                         <div className="row g-0">
                             <div className="col-md-4 col-lg-3 col-sm-3 col-3">
                                 <Link to={`/account/${account?.username}`} className={`avatar ${styles.avatar_box}`}>
-                                    <img src={account.avatar} className="w-px-75 h-auto rounded-circle" />
+                                    <img src={BASE_URL_MEDIA + '/' + account.avatar} className="w-px-75 h-px-75 rounded-circle" />
                                 </Link>
                             </div>
 

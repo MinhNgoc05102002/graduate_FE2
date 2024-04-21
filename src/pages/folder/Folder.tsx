@@ -6,7 +6,7 @@ import BoxCreditAccount from "~/components/Account/Box/BoxCreditAccount";
 import Loading, { PopupMenu } from "~/components/Loading/Index";
 import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
-import { Post } from "~/services/axios";
+import { BASE_URL_MEDIA, Post } from "~/services/axios";
 import { ICredit } from "~/types/ICredit";
 import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
 import styles from "./Folder.module.scss";
@@ -242,7 +242,7 @@ export default function Folder() {
                         <div className="">tạo bởi</div>
                         <div className={styles.avt}>
                             <Link to={`/account`} className="avatar align-items-center d-flex w-auto">
-                                <img src={folder.avatar} className="w-px-20 h-auto rounded-circle" />
+                                <img src={BASE_URL_MEDIA + '/' + folder.avatar} className="w-px-20 h-px-20 rounded-circle" />
                             </Link>
                         </div>
                         <Link to={`/account/`} className={styles.name}>

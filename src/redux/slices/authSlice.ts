@@ -67,6 +67,13 @@ export const refreshToken = createAsyncThunk(
         }
   );
 
+export const changeAvt = createAsyncThunk(
+    'task/changeAvt',
+    async (data: {userData:IUser}) => {
+            return data.userData
+        }
+  );
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: initialUser,
@@ -117,6 +124,9 @@ const authSlice = createSlice({
                 state.loginError.typeError = ""
                 state.logging = false
                 state.isLogin = false
+            })
+            .addCase(changeAvt.fulfilled, (state, action:PayloadAction<IUser>) => {
+                state.userData = action.payload
             });
        }
 })

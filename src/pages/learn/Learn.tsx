@@ -33,7 +33,7 @@ export default function Learn() {
     const [isLearned, setIsLearned] = useState(false);
     const [listFlashcardLearn, setListFlashcardLearn] = useState<IFlashcard[]>([]);
     const [currentCard, setCurrentCard] = useState<IFlashcard|null>(null);
-    const [isEnd, setIsEnd] = useState(true);
+    const [isEnd, setIsEnd] = useState(false);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [listAnsMultiple, setListAnsMultiple] = useState<IFlashcard[]>([]);
     const [typeQuestion, setTypeQuestion] = useState<Number>(0);
@@ -308,7 +308,7 @@ export default function Learn() {
                             <div className="d-flex cursor-pointer" onClick={handleClick}>
                                 <span id="demo-positioned-button" className={`bx bxs-book-reader ${styles.icon_color}`}></span>
                                 <p className={styles.title}>
-                                    Học
+                                    Luyện tập
                                     <span className='bx bx-chevron-down'></span>
                                 </p>
                             </div>

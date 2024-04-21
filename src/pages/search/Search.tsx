@@ -67,7 +67,7 @@ export default function Search() {
                         {/* Username */}
                         <div className={`col-md-11 col-lg-11 col-sm-10 col-9 d-flex align-items-center`}>
                             <h4 className={`fw-bold`}>
-                                Kết quả cho "{searchText}"
+                                {searchText ? `Kết quả cho "${searchText}"` : "Hãy nhập thông tin để tìm kiếm"}
                             </h4>
                         </div>
                     </div>
@@ -112,7 +112,9 @@ function ListResultSearch(props:{searchText:string|undefined, type: string, api:
     const [totalPage, setToTalPage] = useState(1);
 
     useEffect(() => {
-        fetchApiSearch();
+        if (searchText) {
+            fetchApiSearch();
+        }
     }, [searchText, pageIndex, type, api]);
 
     useEffect(() => {

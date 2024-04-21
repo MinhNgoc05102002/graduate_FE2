@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "~/redux/hook";
 import { inforUser, logout } from "~/redux/slices/authSlice";
-import { Post } from "~/services/axios";
+import { BASE_URL_MEDIA, Post } from "~/services/axios";
 import { CheckResponseSuccess, findNotifDate } from "~/utils/common";
 import styles from './Header.module.scss';
 import debounce from "lodash/debounce";
@@ -300,7 +300,7 @@ export default function Header() {
                         <li className="nav-item navbar-dropdown dropdown-user dropdown">
                             <a className="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown">
                                 <div className="avatar avatar-online">
-                                    <img src={userData?.avatar} className="w-px-40 h-auto rounded-circle" />
+                                    <img src={BASE_URL_MEDIA + '/' + userData?.avatar} className="w-px-40 h-px-40 rounded-circle" />
                                 </div>
                             </a>
                             <ul className="dropdown-menu dropdown-menu-end">
@@ -309,7 +309,7 @@ export default function Header() {
                                         <div className="d-flex">
                                             <div className="flex-shrink-0 me-3">
                                                 <div className="avatar avatar-online">
-                                                    <img src={userData?.avatar} className="w-px-40 h-auto rounded-circle" />
+                                                    <img src={BASE_URL_MEDIA + '/' + userData?.avatar} className="w-px-40 h-px-40 rounded-circle" />
                                                 </div>
                                             </div>
                                             <div className="flex-grow-1">
@@ -445,7 +445,7 @@ export default function Header() {
                             <Link to={`/account/${acc.username}`} key={acc.username} className={styles.credit} onClick={() => setSearchText('')}>
                                 <div className={styles.icon}>
                                     {/* <span className="bx bx-group text-color"></span> */}
-                                    <img src={acc.avatar} className="w-px-40 h-auto rounded-circle" />
+                                    <img src={BASE_URL_MEDIA + '/' + acc.avatar} className="w-px-40 h-px-40 rounded-circle" />
                                 </div>
                                 <div className={styles.content}>
                                     <div className={`${styles.name}`}>

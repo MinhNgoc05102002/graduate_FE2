@@ -31,7 +31,7 @@ const LIST_LEARN_BTN = [
         active: true
     },
     {
-        name: "Học",
+        name: "Luyện tập",
         icon: "bx bxs-book-reader",
         link: '/learn',
         active: false
@@ -65,7 +65,7 @@ export default function Credit() {
     const [listFlashcard, setListFlashcard] = useState<IFlashcard[]>([]);
     const [listFlashcardLearn, setListFlashcardLearn] = useState<IFlashcard[]>([]);
     const [currentCard, setCurrentCard] = useState<IFlashcard|null>(null);
-    const [currentIndex, setCurrentIndex] = useState<number>(2);
+    const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [dataOvalChart, setDataOvalChart] = useState<any>([]);
     const [showChart, setShowChart] = useState<boolean>(false);
     const [totalInfo, setTotalInfo] = useState<string>("");
@@ -611,7 +611,7 @@ export default function Credit() {
                     <div className="d-flex">
                         <div className="me-3">
                             <div className="avatar">
-                                <img src={credit?.avatar} className="w-px-40 h-auto rounded-circle" />
+                                <img src={BASE_URL_MEDIA + '/' + credit?.avatar} className="w-px-40 h-px-40 rounded-circle" />
                             </div>
                         </div>
                         <div className="">

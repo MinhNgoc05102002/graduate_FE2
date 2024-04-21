@@ -1,6 +1,7 @@
 import { ICredit, IProps } from "~/types/ICredit";
 import styles from "./BoxCredit.module.scss";
 import { Link } from "react-router-dom";
+import { BASE_URL_MEDIA } from "~/services/axios";
 /**
  * Box Credit Dashboard
  * @returns 
@@ -31,7 +32,7 @@ export default function BoxCredit(props:IProps) {
                             <div className="d-flex">
                                 <div className="flex-shrink-0">
                                     <Link to={`/account/${credit?.createdBy}`} className="avatar align-items-center d-flex">
-                                        <img src={credit?.avatar} className="w-px-30 h-auto rounded-circle" />
+                                        <img src={BASE_URL_MEDIA + '/' + credit?.avatar} className="w-px-30 h-px-30 rounded-circle" />
                                     </Link>
                                 </div>
                                 <Link style={{color: "#708092"}} to={`/account/${credit?.createdBy}`} className="flex-grow-1 align-items-center d-flex">

@@ -3,6 +3,7 @@ import { IPropsModal } from "~/types/ICredit";
 import styles from "./ModalAdd.module.scss";
 import { useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
+import { BASE_URL_MEDIA } from "~/services/axios";
 
 export default function BoxCreditInModal(props:IPropsModal) {
     const checkInit = props.checked;
@@ -29,7 +30,7 @@ export default function BoxCreditInModal(props:IPropsModal) {
                 <div className={`${styles.divider}`}></div>
                 <div className="mx-1 flex-shrink-0">
                     <Link to={`/account/${credit?.createdBy}`} className="avatar align-items-center d-flex w-auto">
-                        <img src={credit?.avatar} className="w-px-20 h-auto rounded-circle" />
+                        <img src={BASE_URL_MEDIA + '/' + credit?.avatar} className="w-px-20 h-px-20 rounded-circle" />
                     </Link>
                 </div>
                 <Link to={`/account/${credit?.createdBy}`} className="text-color align-items-center d-flex">

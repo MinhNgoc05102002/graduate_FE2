@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import Loading from "~/components/Loading/Index";
-import { useAppSelector } from "~/redux/hook";
-import { inforUser } from "~/redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "~/redux/hook";
+import { changeAvt, inforUser, logout } from "~/redux/slices/authSlice";
 import styles from './Setting.module.scss';
 import Button from "@mui/material/Button";
 import CreateIcon from '@mui/icons-material/Create';
@@ -18,13 +18,17 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { BASE_URL_MEDIA, Get, Post } from "~/services/axios";
+import { CheckResponseSuccess } from "~/utils/common";
+import { store } from "~/redux/store";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const INIT_VALUE = {
     oldPass: "",
     newPass: "",
     renewPass: ""
 }
-
 
 export default function Setting() {
     const [isLoading, setIsLoading] = useState(false);
@@ -35,22 +39,140 @@ export default function Setting() {
     const [showPassword, setShowPassword] = useState(false);
     const [showRePassword, setShowRePassword] = useState(false);
     const [showOldPassword, setShowOldPassword] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const userData = useAppSelector(inforUser);
+
+    useEffect(() => {
+        getNotiState();
+    }, [])
+
+    const validFileExtensions:any = { image: ['jpg', 'gif', 'png', 'jpeg', 'svg', 'webp'] };
+    
+    function isValidFileType(fileList:any, fileType:any) {
+        if(!fileList?.length) return true;
+        let file = fileList[0];
+        let fileName = file?.name.toLowerCase();
+        return fileName && validFileExtensions[fileType].indexOf(fileName.split('.').pop()) > -1;
+    }
+
+    const handleSelectImg = (e:any) => {
+        if (!e.target.files || e.target.files.length === 0) {
+            // setSelectedFile(undefined)
+            return
+        }
+        if (!isValidFileType(e.target.files, 'image')) {
+            toast.error('Định dạng file không hợp lệ');
+            return;
+        }
+
+        // handle Upload file 
+        fetchAPICreate(e.target.files[0])
+    }
+
+    const fetchAPICreate = async (data:any) => {
+        const formData = new FormData();
+        formData.append('avatar', data)
+        await Post(
+            "/api/Account/upload-avatar", 
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        ).then(async (res) => {
+            if(CheckResponseSuccess(res)) {
+                let imageFile = res?.returnObj;
+                let user_data:IUser = {...userData, avatar: imageFile}
+                store.dispatch(changeAvt({userData: user_data}));
+                toast.success('Cập nhật ảnh đại diện thành công');
+                // Swal.fire({
+                //     icon: "success",
+                //     title: "Update thành công",
+                //     showConfirmButton: false,
+                //     timer: 600,
+                //   });
+                // navigate(`/credit/${creditId}`);
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+    }
+
+    const getNotiState = async () => {
+        setIsLoading(true);
+        await Get(
+            "/api/Account/get-noti-state-data", 
+            {}, 
+        ).then(async (res) => {
+            if(CheckResponseSuccess(res)) {
+                setIsSendClass(res.returnObj?.sendClass);
+                setIsSendRecall(res.returnObj?.sendRecall)
+                setIsSendLearn(res.returnObj?.sendLearn)
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        });
+
+        setIsLoading(false)
+    }
+
+    const fetchAPIUpdateNotiState = async () => {
+        setIsLoading(true);
+        await Post(
+            "/api/Account/update-noti-state-data", 
+            {
+                sendLearn: isSendLearn,
+                sendClass: isSendClass,
+                sendRecall: isSendRecall
+            },
+        ).then(async (res) => {
+            if(CheckResponseSuccess(res)) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Cập nhật thành công",
+                    showConfirmButton: false,
+                    timer: 600,
+                  });
+
+                // await getNotiState();
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+        setIsLoading(false);
+    }
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowRePassword = () => setShowRePassword((show) => !show);
     const handleClickShowOldPassword = () => setShowOldPassword((show) => !show);
-
+    
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
-    const userData = useAppSelector(inforUser);
-
+    
     const validationSchema = Yup.object().shape({
         oldPass: Yup.string().required('Hãy nhập mật khẩu cũ'),
         newPass: Yup.string().required('Hãy nhập mật khẩu mới')
                      .matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 'Mật khẩu phải bao gồm ít nhất một kí tự số, kí tự viết hoa, kí tự đặc biệt và có độ dài ít nhất 8 kí tự'),
         renewPass: Yup.string().required('Hãy nhập lại mật khẩu mới')
-                     .oneOf([Yup.ref('password')], 'Mật khẩu không trùng khớp')
+                     .oneOf([Yup.ref('newPass')], 'Mật khẩu không trùng khớp')
     });
 
     const {
@@ -61,6 +183,7 @@ export default function Setting() {
         watch,
         getValues,
         setValue,
+        setError,
         formState: { errors }
       } = useForm({
         // defaultValues: INIT_VALUE,
@@ -72,28 +195,31 @@ export default function Setting() {
 
         console.log(data);
 
-        // await Post(
-        //     "/api/Folder/create-folder", 
-        //     data,
-        // ).then(async (res) => {
-        //     if(CheckResponseSuccess(res)) {
-        //         let creditId = res?.returnObj;
-        //         Swal.fire({
-        //             icon: "success",
-        //             title: "Tạo thư mục thành công",
-        //             showConfirmButton: false,
-        //             timer: 600,
-        //           });
-        //         navigate(`/folder/${creditId}`);
-        //     }
-        //     else {
-        //         toast.error("Đã có lỗi xảy ra.");
-        //     }
-        // })
-        // .catch((err) => {
-        //     toast.error("Đã có lỗi xảy ra.");
-        //     console.log(err);
-        // })
+        await Post(
+            "/api/Auth/user-change-password", 
+            {
+                oldPassword: data.oldPass,
+                newPassword: data.newPass
+            },
+        ).then(async (res) => {
+            if(CheckResponseSuccess(res)) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Đổi mật khẩu thành công",
+                    showConfirmButton: false,
+                    timer: 600,
+                  });
+                dispatch(logout())
+                navigate(`/login`);
+            }
+            else {
+                setError("oldPass", { type: "custom", message: res.msg });
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
 
         setIsLoading(false);
         
@@ -115,12 +241,26 @@ export default function Setting() {
                         
                         <div className={styles.box_item}>
                             <div className={styles.avatar}>
-                                <img className={`${styles.img} w-px-75 rounded-circle`} src={userData?.avatar} alt="" />
+                                <img className={`${styles.img} w-px-75 h-px-75 rounded-circle`} src={BASE_URL_MEDIA + "/" + userData?.avatar} alt="" />
                                 <div className={styles.label}>
                                     Ảnh đại diện
-                                        
-                                    <Button size="small" endIcon={<CreateIcon  />} variant="outlined">Đổi ảnh đại diện</Button>
-                                    
+                                    <label htmlFor="avatar">
+                                        <div className={styles.button_avatar}>
+                                            Đổi ảnh đại diện 
+                                            <CreateIcon style={{fontSize: "16px", marginLeft: '5px'}}/>
+                                        </div>
+                                        {/* <Button size="small" endIcon={<CreateIcon  />} variant="outlined">Đổi ảnh đại diện</Button> */}
+                                    </label>
+                                    <div style={{display: "none"}}>
+                                        <TextField
+                                            required
+                                            id="avatar"
+                                            type="file"
+                                            // accept="image/*"
+                                            inputProps={{ accept: 'image/*' }}
+                                            onChange={handleSelectImg}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -187,7 +327,7 @@ export default function Setting() {
                                     Thông báo về lớp học của tôi
                                 </div>
                                 <div className={styles.end_btn}>
-                                    <button type="button" className={`btn btn-primary`} >Lưu</button>
+                                    <button type="button" className={`btn btn-primary`} onClick={() => fetchAPIUpdateNotiState()}>Lưu</button>
                                 </div>
                             </div>
                         </div>
@@ -262,7 +402,7 @@ export default function Setting() {
                                                             onMouseDown={handleMouseDownPassword}
                                                             edge="end"
                                                         >
-                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                        {showOldPassword ? <VisibilityOff /> : <Visibility />}
                                                         </IconButton>
                                                     </InputAdornment>
                                                     ),
