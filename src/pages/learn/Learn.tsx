@@ -319,11 +319,11 @@ export default function Learn() {
                                     <span className={`bx bxs-collection icon`} style={{color: '#696cff'}}></span>
                                     Thẻ ghi nhớ
                                 </MenuItem>
-                                <MenuItem  className={`menu_item`}>
+                                <MenuItem onClick={() => navigate(`/exam/${credit.creditId}`)} className={`menu_item`}>
                                     <span className={`bx bxs-edit-alt icon`} style={{color: '#696cff'}}></span>
                                     Kiểm tra
                                 </MenuItem>
-                                <MenuItem  className={`menu_item`}>
+                                <MenuItem onClick={() => navigate(`/match/${credit.creditId}`)} className={`menu_item`}>
                                     <span className={`bx bxs-extension icon`} style={{color: '#696cff'}}></span>
                                     Ghép thẻ
                                 </MenuItem>
@@ -344,9 +344,9 @@ export default function Learn() {
                 </div>
 
                 <div className={styles.right}>
-                    <div className={styles.btn}>
+                    {/* <div className={styles.btn}>
                         <span className={styles.btn_text}>Tùy chọn</span>
-                    </div>
+                    </div> */}
                     <div onClick={() => navigate(`/credit/${credit.creditId}`)} className={styles.btn}>
                         <span className='bx bx-x'></span>
                     </div>
@@ -393,7 +393,11 @@ export default function Learn() {
                                         return (
                                             <div key={Math.random()} className="col-6">
                                                 <div 
-                                                    onClick={() => {handleAnswer(card.answer)}} 
+                                                    onClick={() => {
+                                                        if (!answer) {
+                                                            handleAnswer(card.answer)
+                                                        }
+                                                    }} 
                                                     className={`${styles.choice} 
                                                                 ${answer && right == true ? styles.right : (answer && right == false ? styles.wrong : (answer ? styles.disable : ''))}`}
                                                 >

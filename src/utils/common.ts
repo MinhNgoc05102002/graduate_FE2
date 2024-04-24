@@ -37,7 +37,7 @@ export function GetPreIdFromCurrentPage() {
 }
 
 
-export function findNotifDate(date_notified = "2021-11-05 15:00:00") {
+export function findNotifDate(date_notified = "2021-11-05 15:00:00", isTimeExam = false) {
     /**
     * @ findNotifDate : Finds the Date Difference of a Notification
     * @ date_notified : The notification date
@@ -95,12 +95,21 @@ export function findNotifDate(date_notified = "2021-11-05 15:00:00") {
     var secs_passed = parseInt(time_passed[2]); 
 
     //Set up your Custom Text output here
-    const s = ["giây trước", "giây trước"]; //seconds
-    const m = ["phút", "giây trước", "phút", "secs ago"]; //minutes
-    const h = ["giờ", "phút trước", "giờ", "phút trước"]; //hours
-    const d = ["ngày", "giờ trước", "ngày", "giờ trước"]; //days
-    const M = ["tháng", "ngày trước", "tháng", "ngày trước"]; //months
-    const y = ["năm", "tháng trước", "năm", "tháng trước"]; //years
+    let s = ["giây trước", "giây trước"]; //seconds
+    let m = ["phút", "giây trước", "phút", "giây trước"]; //minutes
+    let h = ["giờ", "phút trước", "giờ", "phút trước"]; //hours
+    let d = ["ngày", "giờ trước", "ngày", "giờ trước"]; //days
+    let M = ["tháng", "ngày trước", "tháng", "ngày trước"]; //months
+    let y = ["năm", "tháng trước", "năm", "tháng trước"]; //years
+
+    if (isTimeExam) {
+        s = ["giây", "giây"]; //seconds
+        m = ["phút", "giây", "phút", "giây"]; //minutes
+        h = ["giờ", "phút", "giờ", "phút"]; //hours
+        d = ["ngày", "giờ", "ngày", "giờ"]; //days
+        M = ["tháng", "ngày", "tháng", "ngày"]; //months
+        y = ["năm", "tháng", "năm", "tháng"]; //years
+    }
 
     var ret, retA, retB;
 

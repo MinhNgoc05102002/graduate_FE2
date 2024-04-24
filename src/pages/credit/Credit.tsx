@@ -39,13 +39,13 @@ const LIST_LEARN_BTN = [
     {
         name: "Kiểm tra",
         icon: "bx bxs-edit-alt",
-        link: null,
+        link: '/exam',
         active: false
     },
     {
         name: "Ghép thẻ",
         icon: "bx bxs-extension",
-        link: null,
+        link: '/match',
         active: false
     },
 ]
@@ -537,27 +537,27 @@ export default function Credit() {
                                 <div className="col-6">
                                     <h4 className="fw-bold">Bước tiếp theo</h4>
                                     <div className={styles.next_process}>
-                                        <div className={`card hstack mx-1 my-3 row hoverable cursor-pointer`}>
+                                        <div onClick={() => navigate(`/exam/${credit.creditId}`)} className={`card hstack mx-1 my-3 row hoverable cursor-pointer`}>
                                             <div className={`col-2 `}>
-                                                <i className={`bx bxs-collection ${styles.icon}`}></i>
+                                                <i className={`bx bxs-edit-alt ${styles.icon}`}></i>
                                             </div>
                                             <div className={`col-10 ${styles.content}`}>
                                                 <h5 className={styles.title}>
-                                                    Học / Kiểm tra
+                                                    Kiểm tra
                                                 </h5>
-                                                <p className={styles.descrip}>Luyện tập bằng các dạng câu hỏi trắc nghiệm, tự luận, đúng/sai</p>
+                                                <p className={styles.descrip}>Làm bài kiểm tra cho bộ thẻ này</p>
                                             </div>
                                         </div>
 
-                                        <div className={`card hstack mx-1 my-3 row hoverable cursor-pointer`}>
+                                        <div onClick={() => navigate(`/learn/${credit.creditId}`)} className={`card hstack mx-1 my-3 row hoverable cursor-pointer`}>
                                             <div className={`col-2 `}>
-                                                <i className={`bx bxs-collection ${styles.icon}`}></i>
+                                                <i className={`bx bxs-book-reader ${styles.icon}`}></i>
                                             </div>
                                             <div className={`col-10 ${styles.content}`}>
                                                 <h5 className={styles.title}>
-                                                    Đến phương pháp Học"
+                                                    Đến phần luyện tập
                                                 </h5>
-                                                <p className={styles.descrip}>Ôn tập các thẻ flashcard bằng phương pháp học</p>
+                                                <p className={styles.descrip}>Ôn lại các thẻ bằng phương pháp "Luyện tập"</p>
                                             </div>
                                         </div>
                                     </div>

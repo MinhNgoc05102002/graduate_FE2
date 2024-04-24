@@ -14,6 +14,8 @@ import Learn from "~/pages/learn/Learn"
 import Search from "~/pages/search/Search"
 import CreateClass from "~/pages/create-class/CreateClass"
 import Setting from "~/pages/settingpage/Setting"
+import Exam from "~/pages/exam/Exam"
+import Match from "~/pages/match/Match"
 
 export const PUBLIC_ROUTER = [
     {
@@ -108,6 +110,16 @@ export const PRIVATE_ROUTER = [
     {
         path:"/learn/:id",
         page: Learn,
+        layout: null
+    },
+    {
+        path:"/exam/:id",
+        page: Exam,
+        layout: null
+    },
+    {
+        path:"/match/:id",
+        page: Match,
         layout: null
     },
     {
