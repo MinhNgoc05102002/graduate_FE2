@@ -1,23 +1,30 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
+import { DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import * as Yup from 'yup';
+import { BootstrapDialog } from '~/components/Common';
 import Loading from "~/components/Loading/Index";
 import { useAppDispatch, useAppSelector } from "~/redux/hook";
 import { ILoginPayload, inforUser, isError, isLogin, logging, login, logout, messageErrorLogin } from "~/redux/slices/authSlice";
+import CloseIcon from '@mui/icons-material/Close';
+import styles from './Login.module.scss'
+import { Post } from '~/services/axios';
+import { CheckResponseSuccess } from '~/utils/common';
+import Swal from 'sweetalert2';
 
 function LoginPage() {
-    // const [isLoading, setIsLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const isLoading = useAppSelector(logging);
     // const count = useAppSelector(selectCount);
     const isLoginUser = useAppSelector(isLogin);
     const userData = useAppSelector(inforUser);
     const msgErrorLogin = useAppSelector(messageErrorLogin);
     const isErrorLogin = useAppSelector(isError);
+    const [open, setOpen] = useState(false);
 
     const dispatch = useAppDispatch();
 
@@ -55,17 +62,49 @@ function LoginPage() {
         if(isErrorLogin) toast.warning(msgErrorLogin);
       };
 
-      const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-      const handleClickShowPassword = () => setShowPassword((show) => !show);
-    
-      const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-      };
+    };
+
+    const onSubmitResetPass = async (data:any) => {
+        setLoading(true);
+
+        // call api reset password 
+        await Post(
+            "/api/Auth/forget-password", 
+            data, 
+            // userData?.token ?? ""
+        ).then( async (res) => {
+            if (res.code == 99) {
+                toast.error(res.msg);
+            }
+            else if (CheckResponseSuccess(res)) {
+                setOpen(false);
+                Swal.fire({
+                    icon: "success",
+                    title: "Mật khẩu mới đã được gửi vào email của bạn.",
+                    showConfirmButton: true,
+                });
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+
+        setLoading(false);
+    }
 
     return (<div>
         <ToastContainer />
-        <Loading isLoading={isLoading}/>
+        <Loading isLoading={isLoading || loading}/>
 
         <div className="container-xxl">
             <div className="authentication-wrapper authentication-basic container-p-y">
@@ -198,7 +237,7 @@ function LoginPage() {
                                     {/* <small style={{color: "#ff3e1d"}}>{msgErrorLogin}</small>     */}
                                     <div className="d-flex justify-content-between">
                                         <label className="form-label" htmlFor="password"></label>
-                                        <a href="#">
+                                        <a href="#" onClick={() => setOpen(true)}>
                                             <small>Quên mật khẩu?</small>
                                         </a>
                                     </div>
@@ -232,46 +271,91 @@ function LoginPage() {
             </div>
         </div>
 
-        {/* <>
-            username : kminchelle
-            <br />
-            password : 0lelplR
-            <br />
-            <label>Tài khoản</label>
-            <input 
-            onChange={(event) => {
-                const value = event.target.value;
-                setFormLogin({
-                    ...formLogin,
-                    loginName: value
-                })
-            }} 
-            />
-            <br />
-            <label>Mật khẩu</label>
-            <input onChange={(event) => {
-                const value = event.target.value;
-                setFormLogin({
-                    ...formLogin,
-                    password: value
-                })
-            }} />
-            <button type="button" onClick={handleLogin}>login</button>
-            <button type="button" onClick={handleLogout}>logout</button>
-            <br />
-            <br />
-
-
-            {currentUser?.firstName}
-            <br />
-            {currentUser?.lastName}
-            <br />
-            {currentUser?.gender}
-            <br />
-            <button onClick={() => navigate("/")}>Home</button>
-        </> */}
+        <ModalResetPass 
+            open={open}
+            setOpen={setOpen}
+            onSubmit={onSubmitResetPass}
+        />
 
     </div>);
 }
+
+
+function ModalResetPass(props:any) {
+    const {open, setOpen, onSubmit} = props;
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().required('Hãy nhập Email của bạn').email('Email không hợp lệ'),
+    });
+
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors }
+    } = useForm({ resolver: yupResolver(validationSchema) });
+
+    const handleSubmitReset = async (data:any) => {
+        await onSubmit(data);
+        reset();
+    }
+
+    return (
+        <BootstrapDialog
+            onClose={() => {setOpen(false); reset();}}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+            maxWidth={'sm'}
+            fullWidth={true}
+        >
+            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                Hãy nhập email của bạn để cấp lại mật khẩu
+            </DialogTitle>
+            <IconButton
+                aria-label="close"
+                onClick={() => {setOpen(false); reset();}}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: (theme) => theme.palette.grey[500],
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
+
+            <DialogContent dividers>
+                <div className={styles.modal_changepass}>
+                    <form id="formCreate" className="mb-3 mt-3" method="POST">
+
+                        {/* Input Credit */}
+                        <div className={styles.form_credit}>
+                            <TextField
+                                required
+                                id="email"
+                                // name="email"
+                                label="Email"
+                                fullWidth
+                                margin="dense"
+                                {...register('email')}
+                                error={errors.email ? true : false}
+                                helperText={errors.email ? errors.email?.message : ""}
+                            />
+                        </div>
+
+                    </form>
+                </div>
+            </DialogContent>
+
+
+            <DialogActions>
+                <button type="button" className={`btn btn-primary`} onClick={handleSubmit(handleSubmitReset)}>
+                    Gửi
+                </button>
+            </DialogActions>
+        </BootstrapDialog>
+    )
+}
+
 
 export default LoginPage;

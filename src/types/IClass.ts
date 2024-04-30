@@ -10,6 +10,7 @@ export interface IClass {
     countReport: number
     countJoinDTO: number
     countCredit: number
+    joined: boolean
 }
 
 export interface IProps {

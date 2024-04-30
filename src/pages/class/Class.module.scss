@@ -165,3 +165,12 @@
         color: #696cff;
     }
 }
+
+.join_btn {
+    font-size: 16px !important;
+    border-radius: 10px !important;
+    margin-left: 10px !important;
+    &:hover {
+        background-color: #7e80ff !important;
+    }
+}

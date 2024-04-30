@@ -92,7 +92,7 @@ export default function Folder() {
     const getListCredit = async () => {
         setIsLoading(true);
         await Post(
-            "/api/Credit/get-list-credit-by-user",
+            "/api/Credit/get-list-credit-created-by-user",
             {
                 pageSize: 100,
                 pageIndex: pageIndexAll,
@@ -241,43 +241,44 @@ export default function Folder() {
 
                         <div className="">tạo bởi</div>
                         <div className={styles.avt}>
-                            <Link to={`/account`} className="avatar align-items-center d-flex w-auto">
+                            <Link to={`/account/${folder.createdBy}`} className="avatar align-items-center d-flex w-auto">
                                 <img src={BASE_URL_MEDIA + '/' + folder.avatar} className="w-px-20 h-px-20 rounded-circle" />
                             </Link>
                         </div>
-                        <Link to={`/account/`} className={styles.name}>
+                        <Link to={`/account/${folder.createdBy}`} className={styles.name}>
                             <span className="fw-semibold d-block">{folder.createdBy}</span>
                         </Link>
                     </div>
 
-                    <div className={styles.btn}>
-                        {/* Folder ko có chia sẻ  */}
-                        {/* <Tooltip title="Chia sẻ" placement="top" arrow>
-                            <span className='bx bxs-share-alt'></span>
-                        </Tooltip> */}
-                        <Tooltip onClick={() => setOpen(true)} title="Thêm bộ thẻ" placement="top" arrow>
-                            <span className='bx bx-list-plus'></span>
-                        </Tooltip>
-                        <Tooltip title="Cập nhật" placement="top" arrow>
-                            <PopupMenu 
-                                renderBtn={(handleClick:any) => (
-                                    <span id="demo-positioned-button" onClick={handleClick} className='bx bx-dots-horizontal-rounded'></span>
-                                )}
-                                renderItem={(handleClose:any) => (
-                                    <div>
-                                        <MenuItem onClick={() => navigate(`/create-folder/${folder.folderId}`)} className="menu_item">
-                                            <span className='bx bxs-pencil icon'></span>
-                                            Chỉnh sửa
-                                        </MenuItem>
-                                        <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
-                                            <span className='bx bx-trash icon'></span>
-                                            Xóa thư mục
-                                        </MenuItem>
-                                    </div>
-                                )}
-                            />
-                        </Tooltip>
-                    </div>
+                    {userData?.username == folder.createdBy ?
+                        <div className={styles.btn}>
+                            {/* Folder ko có chia sẻ  */}
+                            {/* <Tooltip title="Chia sẻ" placement="top" arrow>
+                                <span className='bx bxs-share-alt'></span>
+                            </Tooltip> */}
+                            <Tooltip onClick={() => setOpen(true)} title="Thêm bộ thẻ" placement="top" arrow>
+                                <span className='bx bx-list-plus'></span>
+                            </Tooltip>
+                            <Tooltip title="Cập nhật" placement="top" arrow>
+                                <PopupMenu 
+                                    renderBtn={(handleClick:any) => (
+                                        <span id="demo-positioned-button" onClick={handleClick} className='bx bx-dots-horizontal-rounded'></span>
+                                    )}
+                                    renderItem={(handleClose:any) => (
+                                        <div>
+                                            <MenuItem onClick={() => navigate(`/create-folder/${folder.folderId}`)} className="menu_item">
+                                                <span className='bx bxs-pencil icon'></span>
+                                                Chỉnh sửa
+                                            </MenuItem>
+                                            <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
+                                                <span className='bx bx-trash icon'></span>
+                                                Xóa thư mục
+                                            </MenuItem>
+                                        </div>
+                                    )}
+                                />
+                            </Tooltip>
+                        </div> : null}
                 </div>
                 <div className={styles.title}>
                     <h2 className={styles.name}>
@@ -315,7 +316,8 @@ export default function Folder() {
                 {listCredit?.length == 0 && showMsg ?
                     <div className={styles.empty}>
                         <h3>{search ? 'Không tìm thấy kết quả' : 'Thư mục này chưa có bộ thẻ nào'}</h3>
-                        {search ? null : <div className='d-flex justify-content-center'>
+                        
+                        {(search || userData?.username != folder.createdBy) ? null : <div className='d-flex justify-content-center'>
                             <Fab onClick={() => setOpen(true)} sx={{ ...fabGreenStyle } as SxProps} color="inherit" variant="extended">
                                 <AddIcon sx={{ mr: 1 }} />
                                 Thêm bộ thẻ

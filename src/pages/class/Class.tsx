@@ -22,6 +22,7 @@ import { ICredit } from "~/types/ICredit";
 import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
 import NotFound from "../notfound/NotFound";
 import styles from "./Class.module.scss";
+import Credit from '../credit/Credit';
 const cx = classNames.bind(styles);
 
 const LIST_NAVBAR = [
@@ -49,7 +50,7 @@ const TYPE_POPUP = [
     {
         id: "CREDIT",
         title: "Thêm bộ thẻ",
-        apiGetAll: '/api/Credit/get-list-credit-by-user',
+        apiGetAll: '/api/Credit/get-list-credit-created-by-user',
         apiGetCurrent: '/api/Credit/get-list-credit-by-class',
         apiSubmit: 'api/Class/add-item-to-class',
         key: 'creditId',
@@ -274,6 +275,37 @@ export default function Classes() {
         setIsLoading(false);
     }
 
+    const handleJoinClass = async () => {
+        setIsLoading(true);
+        await Post(
+            "/api/Class/join-class",
+            {
+                classId: classId,
+            },
+        ).then((res) => {
+            if (CheckResponseSuccess(res)) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Tham gia lớp học thành công",
+                    showConfirmButton: false,
+                    timer: 600,
+                });
+
+                getInfoClass();
+                setReload(true);
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+        // setListSelected([])
+        setIsLoading(false);
+    }
+
     const handleCheckInModal = (checked: any, creditId: any) => {
         if (checked) {
             setListSelected((prev: any) => [...prev, creditId]);
@@ -342,29 +374,40 @@ export default function Classes() {
                         <Tooltip title="Chia sẻ" placement="top" arrow>
                             <span className='bx bxs-share-alt' onClick={() => {navigator.clipboard.writeText(window?.location?.toString()); toast.success('Đã sao chép vào bảng nhớ tạm')}}></span>
                         </Tooltip>
-                        <Tooltip  title="Thêm bộ thẻ" placement="top" arrow>
-                            <span className='bx bx-list-plus' onClick={() => {handleOpen(TYPE_POPUP[0]); }}></span>
-                        </Tooltip>
-                        <Tooltip title="Thêm thư mục" placement="top" arrow>
-                            <span className='bx bx-folder' onClick={() => {handleOpen(TYPE_POPUP[1]); }}></span>
-                        </Tooltip>
-                            <PopupMenu 
-                                renderBtn={(handleClick:any) => (
-                                    <span id="demo-positioned-button" onClick={handleClick} className='bx bx-dots-horizontal-rounded'></span>
-                                )}
-                                renderItem={(handleClose:any) => (
-                                    <div>
-                                        <MenuItem onClick={() => navigate(`/create-class/${_class.classId}`)} className="menu_item">
-                                            <span className='bx bxs-pencil icon'></span>
-                                            Chỉnh sửa
-                                        </MenuItem>
-                                        <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
-                                            <span className='bx bx-trash icon'></span>
-                                            Xóa lớp học
-                                        </MenuItem>
-                                    </div>
-                                )}
-                            />
+                        {/* nếu là member và class cho phép member thêm */}
+                        { ((_class.joined && _class.acceptEdit) || _class.createdBy == userData?.username) ? 
+                        <>
+                            <Tooltip  title="Thêm bộ thẻ" placement="top" arrow>
+                                <span className='bx bx-list-plus' onClick={() => {handleOpen(TYPE_POPUP[0]); }}></span>
+                            </Tooltip>
+                            <Tooltip title="Thêm thư mục" placement="top" arrow>
+                                <span className='bx bx-folder' onClick={() => {handleOpen(TYPE_POPUP[1]); }}></span>
+                            </Tooltip>
+                            {userData?.username == _class.createdBy ? 
+                                <PopupMenu 
+                                    renderBtn={(handleClick:any) => (
+                                        <span id="demo-positioned-button" onClick={handleClick} className='bx bx-dots-horizontal-rounded'></span>
+                                    )}
+                                    renderItem={(handleClose:any) => (
+                                        <div>
+                                            <MenuItem onClick={() => navigate(`/create-class/${_class.classId}`)} className="menu_item">
+                                                <span className='bx bxs-pencil icon'></span>
+                                                Chỉnh sửa
+                                            </MenuItem>
+                                            <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
+                                                <span className='bx bx-trash icon'></span>
+                                                Xóa lớp học
+                                            </MenuItem>
+                                        </div>
+                                    )}
+                                />: null}
+                        </> : null}
+
+                        {(!_class.joined &&  !(_class.createdBy == userData?.username)) ? 
+                        <>
+                            <span onClick={() => handleJoinClass()} className={`${styles.join_btn} btn btn-primary`}>Tham gia lớp học</span>
+                        </> : null}
+
                         {/* <Tooltip title="Xóa, Sao chép, ..." placement="top" arrow>
                             <span className='bx bx-dots-horizontal-rounded'></span>
                         </Tooltip> */}

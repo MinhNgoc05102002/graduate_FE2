@@ -49,11 +49,21 @@ const NOTI_TYPE = [
         icon: '/src/assets/img/icons/noti_icon_warning.png'
     },
     {
-        id: 'CLASS_INFO',
+        id: 'JOIN_CLASS',
         link: '/class/',
         icon: '/src/assets/img/icons/noti_icon_user.png'
     },
-    {   id: 'CLASS_UPDATE',
+    {
+        id: 'ADD_CREDIT_CLASS',
+        link: '/class/',
+        icon: '/src/assets/img/icons/noti_icon_user.png'
+    },
+    {
+        id: 'ADD_FOLDER_CLASS',
+        link: '/class/',
+        icon: '/src/assets/img/icons/noti_icon_user.png'
+    },
+    {   id: 'UPDATE_CLASS',
         link: '/class/',
         icon: '/src/assets/img/icons/noti_icon_update.png'
     }
@@ -84,7 +94,7 @@ function NotiItem(props: any) {
                     </div>
                     <div className="flex-grow-1">
                         <span className="fw-semibold d-block">
-                            {noti.content}
+                            {noti.contentShow}
                             <small className="text-muted"> {findNotifDate(noti.createdAt)}</small>
                         </span>
                         
@@ -127,8 +137,8 @@ export default function Header() {
         await Post(
             "/api/Account/get-noti", 
             {
-                pageSize: 3,
-                pageIndex: 0
+                pageSize: 1000,
+                pageIndex: 1
             }, 
             // userData?.token ?? ""
         ).then((res) => {
@@ -263,7 +273,7 @@ export default function Header() {
                     <ul className="navbar-nav flex-row align-items-center ms-auto">
                         {/* <!-- Noti --> */}
                         <li className="nav-item navbar-dropdown dropdown-user dropdown">
-                            <a className="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown">
+                            <a onClick={() => getNotification()} className="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown">
                                 {/* <div className="avatar">
                                     <button type="button" className="btn rounded-pill btn-icon btn-outline-primary">
                                         <span className="tf-icons bx bx-bell"></span>

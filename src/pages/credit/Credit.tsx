@@ -395,6 +395,35 @@ export default function Credit() {
         });
     }
 
+    const handleCopyCredit = async () => {
+        setIsLoading(true);
+        await Post(
+            "/api/Credit/copy-credit",
+            {
+                creditId: credit?.creditId
+            },
+        ).then((res) => {
+            if (CheckResponseSuccess(res) && res.returnObj != null) {
+                // setIsLoading(false);
+                Swal.fire({
+                    title: "Đã copy thành công!",
+                    icon: "success",
+                    timer: 700,
+                });
+                navigate('/credit/' + res.returnObj);
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+
+        setIsLoading(false);
+    }
+
     const handleSpeak = (text:string) => {
         let utterance = new SpeechSynthesisUtterance(text);
 
@@ -626,9 +655,9 @@ export default function Credit() {
                     <Tooltip title="Chia sẻ" placement="top" arrow>
                         <span className='bx bxs-share-alt' onClick={() => {navigator.clipboard.writeText(window?.location?.toString()); toast.success('Đã sao chép vào bảng nhớ tạm')}}></span>
                     </Tooltip>
-                    <Tooltip title="Chỉnh sửa" placement="top" arrow>
+                    {userData?.username == credit.createdBy ? <Tooltip title="Chỉnh sửa" placement="top" arrow>
                         <span className='bx bxs-pencil' onClick={() => navigate(`/create-credit/${credit.creditId}`)}></span>
-                    </Tooltip>
+                    </Tooltip> : null}
                     {/* <Tooltip title="Xóa, Sao chép, ..." placement="top" arrow> */}
                         <PopupMenu 
                             renderBtn={(handleClick:any) => (
@@ -636,18 +665,20 @@ export default function Credit() {
                             )}
                             renderItem={(handleClose:any) => (
                                 <div>
-                                    <MenuItem className="menu_item">
-                                        <span className='bx bx-copy-alt icon'></span>
-                                        Tạo bản sao
-                                    </MenuItem>
-                                    <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
-                                        <span className='bx bx-message-square-error icon'></span>
-                                        Báo cáo bộ thẻ 
-                                    </MenuItem>
-                                    <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
+                                    {userData?.username == credit.createdBy ? <MenuItem onClick={() => {handleClose(); handleDelete();}} className="menu_item">
                                         <span className='bx bx-trash icon'></span>
                                         Xóa bộ thẻ 
-                                    </MenuItem>
+                                    </MenuItem> : 
+                                    <>
+                                        <MenuItem className="menu_item" onClick={() => handleCopyCredit()}>
+                                            <span className='bx bx-copy-alt icon'></span>
+                                            Tạo bản sao
+                                        </MenuItem>
+                                        <MenuItem onClick={() => (console.log())} className="menu_item">
+                                            <span className='bx bx-message-square-error icon'></span>
+                                            Báo cáo bộ thẻ 
+                                        </MenuItem>
+                                    </>}
                                 </div>
                             )}
                         />
