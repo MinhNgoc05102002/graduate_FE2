@@ -41,31 +41,49 @@ const NOTI_TYPE = [
     {
         id: 'REPEAT_LEARN',
         link: '/credit/',
-        icon: '/src/assets/img/icons/noti_icon_remind.png'
+        icon: '/src/assets/img/icons/noti_icon_remind.png',
+        prefix: ''
     },
     {
         id: 'ADMIN_WARN',
         link: null,
-        icon: '/src/assets/img/icons/noti_icon_warning.png'
+        icon: '/src/assets/img/icons/noti_icon_warning.png',
+        prefix: ''
+    },
+    {
+        id: 'ADMIN_WARN_CREDIT',
+        link: '/credit/',
+        icon: '/src/assets/img/icons/noti_icon_warning.png',
+        prefix: ''
+    },
+    {
+        id: 'ADMIN_LOCK_CREDIT',
+        link: null,
+        icon: '/src/assets/img/icons/noti_icon_warning.png',
+        prefix: 'Bộ thẻ '
     },
     {
         id: 'JOIN_CLASS',
         link: '/class/',
-        icon: '/src/assets/img/icons/noti_icon_user.png'
+        icon: '/src/assets/img/icons/noti_icon_user.png',
+        prefix: ''
     },
     {
         id: 'ADD_CREDIT_CLASS',
         link: '/class/',
-        icon: '/src/assets/img/icons/noti_icon_user.png'
+        icon: '/src/assets/img/icons/noti_icon_user.png',
+        prefix: ''
     },
     {
         id: 'ADD_FOLDER_CLASS',
         link: '/class/',
-        icon: '/src/assets/img/icons/noti_icon_user.png'
+        icon: '/src/assets/img/icons/noti_icon_user.png',
+        prefix: ''
     },
     {   id: 'UPDATE_CLASS',
         link: '/class/',
-        icon: '/src/assets/img/icons/noti_icon_update.png'
+        icon: '/src/assets/img/icons/noti_icon_update.png',
+        prefix: ''
     }
 ]
 
@@ -81,7 +99,8 @@ function NotiItem(props: any) {
         }
     }
 
-    const icon = NOTI_TYPE.find(item => item.id === noti.notiType)?.icon
+    // const icon = NOTI_TYPE.find(item => item.id === noti.notiType)?.icon;
+    const noti_type = NOTI_TYPE.find(item => item.id === noti.notiType);
 
     return (
         <li>
@@ -89,12 +108,12 @@ function NotiItem(props: any) {
                 <div className="d-flex">
                     <div className="flex-shrink-0 me-3">
                         <div className="avatar">
-                            <img src={icon} className="w-px-40 h-auto rounded-circle" />
+                            <img src={noti_type?.icon} className="w-px-40 h-auto rounded-circle" />
                         </div>
                     </div>
                     <div className="flex-grow-1">
                         <span className="fw-semibold d-block">
-                            {noti.contentShow}
+                            {noti_type?.prefix} {noti.contentShow}
                             <small className="text-muted"> {findNotifDate(noti.createdAt)}</small>
                         </span>
                         

@@ -20,6 +20,18 @@ import Swal from 'sweetalert2';
 import ListCard from "~/components/Credit/Detail";
 import { IFlashcard } from "~/types/IFlash";
 import NotFound from "../notfound/NotFound";
+import { BootstrapDialog, fabGreenStyle } from "~/components/Common";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import * as Yup from 'yup';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioGroup, TextField } from "@mui/material";
+import { Preview } from "@mui/icons-material";
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
 
@@ -50,6 +62,25 @@ const LIST_LEARN_BTN = [
     },
 ]
 
+const REPORT_REASON = [
+    {
+        id: "WAR",
+        label: "Chứa thông tin gây thù địch"
+    },
+    {
+        id: "WRONG_INFO",
+        label: "Chứa thông tin không chính xác"
+    },
+    {
+        id: "COPY",
+        label: "Chứa thông tin đạo nhái bản quyền"
+    },
+    {
+        id: "ORTHER",
+        label: "Lý do khác"
+    },
+]
+
 const MEMORY = [
     'Trí nhớ 1 ngày',
     'Trí nhớ 1 tuần',
@@ -71,12 +102,37 @@ export default function Credit() {
     const [totalInfo, setTotalInfo] = useState<string>("");
     const navigate = useNavigate();
 
+    const [open, setOpen] = useState(false);
+
     useEffect(() => {
         if (creditId) {
             getStartupData();
         }
         // handleSetDataChart();
     }, [creditId]);
+
+    const validationSchema = Yup.object().shape({
+        reason: Yup.string().required('Hãy chọn lý do của bạn'),
+        message: Yup.string().nullable().max(1000, 'Thông tin bổ sung không được vượt quá 1000 kí tự')
+    });
+
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        watch,
+        getValues,
+        setValue,
+        setError,
+        formState: { errors }
+      } = useForm({
+        defaultValues: {
+            reason: '',
+            message: ''
+        },
+        resolver: yupResolver(validationSchema)
+      });
 
     const getStartupData = async () => {
         setIsLoading(true);
@@ -424,6 +480,41 @@ export default function Credit() {
         setIsLoading(false);
     }
 
+    const onSubmit = async (data:any) => {
+        console.log(data)
+        setOpen(false);
+        setIsLoading(true);
+        await Post(
+            "/api/Credit/report-credit",
+            {
+                objReportedId: credit?.creditId,
+                typeObj: "CREDIT",
+                reason: data.reason,
+                message: data.message
+            },
+        ).then((res) => {
+            if (CheckResponseSuccess(res)) {
+                // setIsLoading(false);
+                Swal.fire({
+                    title: "Gửi thành công!",
+                    icon: "success",
+                    timer: 700,
+                });
+                let newCredit:any = {...credit, isReported: true}
+                setCredit(newCredit);
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+
+        setIsLoading(false);
+    }
+
     const handleSpeak = (text:string) => {
         let utterance = new SpeechSynthesisUtterance(text);
 
@@ -674,7 +765,11 @@ export default function Credit() {
                                             <span className='bx bx-copy-alt icon'></span>
                                             Tạo bản sao
                                         </MenuItem>
-                                        <MenuItem onClick={() => (console.log())} className="menu_item">
+                                        <MenuItem 
+                                            disabled = {credit.isReported}
+                                            onClick={() => {setOpen(true); handleClose(); }} 
+                                            className="menu_item" 
+                                        >
                                             <span className='bx bx-message-square-error icon'></span>
                                             Báo cáo bộ thẻ 
                                         </MenuItem>
@@ -682,7 +777,84 @@ export default function Credit() {
                                 </div>
                             )}
                         />
-                        
+                        <BootstrapDialog
+                            onClose={() => {setOpen(false); reset();}}
+                            aria-labelledby="customized-dialog-title"
+                            open={open}
+                            maxWidth={'sm'}
+                            fullWidth={true}
+                        >
+                            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                                Báo cáo bộ thẻ này
+                            </DialogTitle>
+                            <IconButton
+                                aria-label="close"
+                                onClick={() => {setOpen(false); reset();}}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500],
+                                }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+
+                            <DialogContent dividers>
+                                <div className={styles.modal_changepass}>
+                                    <form id="formCreate" className="mb-3 mt-3" method="POST">
+
+                                        {/* Input Credit */}
+                                        <div className={styles.form_credit}>
+                                            <FormControl>
+                                                <FormLabel id="demo-controlled-radio-buttons-group">Vì sao bạn báo cáo bộ thẻ này?</FormLabel>
+                                                <Controller
+                                                    control={control}
+                                                    {...register('reason')}
+                                                    render={({ field }) => (
+                                                        <RadioGroup
+                                                            aria-labelledby="demo-controlled-radio-buttons-group"
+                                                            // name="controlled-radio-buttons-group"
+                                                            {...field}
+                                                        >
+                                                            {REPORT_REASON.map((item) => (
+                                                                <FormControlLabel key={item.id} value={item.id} control={<Radio />} label={item.label} />
+                                                            ))}
+                                                        </RadioGroup>
+                                                    )}
+                                                />
+                                                <p style={{color: 'red'}} className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained Mui-required css-1wc848c-MuiFormHelperText-root" id="message-helper-text">
+                                                    {errors.reason ? errors.reason?.message : ""}
+                                                </p>
+                                            </FormControl>
+
+                                            <TextField
+                                                required
+                                                id="message"
+                                                // name="loginName"
+                                                label="Thông tin bổ sung"
+                                                fullWidth
+                                                margin="normal"
+                                                variant="outlined" 
+                                                // size="small"
+                                                {...register('message')}
+                                                error={errors.message ? true : false}
+                                                helperText={errors.message ? errors.message?.message : ""}
+                                                
+                                            />
+                                            
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </DialogContent>
+
+                            <DialogActions>
+                                <button type="button" className={`btn btn-primary`} onClick={handleSubmit(onSubmit)}>
+                                    Gửi
+                                </button>
+                            </DialogActions>
+                        </BootstrapDialog>
                     {/* </Tooltip> */}
                 </div> : 
                 <div className={styles.learn_btn}>

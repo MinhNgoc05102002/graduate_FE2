@@ -16,6 +16,7 @@ export interface ICredit {
     folders: any
     name: string
     isLearned: boolean
+    isReported: boolean
 }
 
 export interface IPropsModal {
