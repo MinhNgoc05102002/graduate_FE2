@@ -16,6 +16,7 @@ import CreateClass from "~/pages/create-class/CreateClass"
 import Setting from "~/pages/settingpage/Setting"
 import Exam from "~/pages/exam/Exam"
 import Match from "~/pages/match/Match"
+import Test from "~/pages/test/Test"
 
 export const PUBLIC_ROUTER = [
     {
@@ -26,6 +27,11 @@ export const PUBLIC_ROUTER = [
     {
         path:"/register",
         page: Register,
+        layout: AuthLayout
+    },
+    {
+        path:"/test",
+        page: Test,
         layout: AuthLayout
     },
 ]

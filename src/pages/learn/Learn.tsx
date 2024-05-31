@@ -165,11 +165,11 @@ export default function Learn() {
         })
     }; 
 
-    const handleSpeak = (text:string) => {
-        let utterance = new SpeechSynthesisUtterance(text);
+    // const handleSpeak = (text:string) => {
+    //     let utterance = new SpeechSynthesisUtterance(text);
 
-        speechSynthesis.speak(utterance);
-    }
+    //     speechSynthesis.speak(utterance);
+    // }
 
     
 
@@ -368,7 +368,7 @@ export default function Learn() {
                         :    
                             <div className={styles.top_content}>
                                 Hãy điền thông tin bạn nghe được 
-                                <span onClick={() => handleSpeak(currentCard?.question ?? '')} className={`bx bx-volume-full ${styles.audio_btn}`}></span>
+                                <span onClick={() => handleSpeak(currentCard?.question ?? '', currentCard?.questionLang ?? 'en-US')} className={`bx bx-volume-full ${styles.audio_btn}`}></span>
                             </div>
                         }
                     </div>

@@ -1,3 +1,4 @@
+import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -7,7 +8,7 @@ import * as Yup from 'yup';
 import BoxCreateCard from '~/components/BoxCreateCard/BoxCreateCard';
 import Loading from '~/components/Loading/Index';
 import { BASE_URL_MEDIA, Post } from '~/services/axios';
-import { CheckResponseSuccess } from '~/utils/common';
+import { CheckResponseSuccess, TEMPLATE_CREATE_CREDIT } from '~/utils/common';
 import styles from './CreateCredit.module.scss';
 import Swal from 'sweetalert2'
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -33,6 +34,8 @@ import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import { ICategory } from '~/types/ICategory';
 import NotFound from '../notfound/NotFound';
+import { DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { BootstrapDialog } from "~/components/Common";
 
 const INIT_VALUE = {
     name: "",
@@ -100,14 +103,15 @@ const MenuProps = {
 export default function CreateCredit() {
     const userData = useAppSelector(inforUser);
     const [isLoading, setIsLoading] = useState(false);
-    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [showNotFound, setShowNotFound] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const { id } = useParams();
     const [personName, setPersonName] = useState<string[]>([]);
     const [listCategory, setListCategory] = useState<ICategory[]>([]);
     const [listCategorySelected, setListCategorySelected] = useState<string[]>([]);
+    // const [isEdit, setIsEdit] = useState(false);
 
     const validFileExtensions:any = { image: ['jpg', 'gif', 'png', 'jpeg', 'svg', 'webp'] };
 
@@ -134,13 +138,6 @@ export default function CreateCredit() {
               })
             ).min(1, `Bộ thẻ phải chứa ít nhất một thẻ flashcard`)
     });
-
-    // const {
-    //     register,
-    //     control,
-    //     handleSubmit,
-    //     formState: { errors }
-    // } = useForm({ resolver: yupResolver(validationSchema) });
 
     const {
         register,
@@ -173,8 +170,9 @@ export default function CreateCredit() {
         }
     }, [id]);
 
-    const getInfoCredit = (id:any) => {
-        Post(
+    const getInfoCredit = async (id:any) => {
+        setIsLoading(true);
+        await Post(
             "/api/Credit/get-credit-by-id", 
             id, 
             {
@@ -187,13 +185,15 @@ export default function CreateCredit() {
             if(CheckResponseSuccess(res)) {
                 let credit = res?.returnObj;
                 if (credit) {
-                    setValue('name', credit.name, { shouldTouch: true });
-                    setValue('description', credit.description, { shouldTouch: true });
-
+                    setValue('name', credit.name);
+                    setValue('description', credit.description);
+                        
                     let listCategoryId = credit.categories.map((cate:any) => cate.categoryId);
                     setListCategorySelected(listCategoryId);
                     // setCredit(credit);
                     // setIsLearned(credit.isLearned);
+                    setShowNotFound(false);
+                    // setIsEdit(true);
                 }
                 else {
                     setShowNotFound(true);
@@ -207,6 +207,7 @@ export default function CreateCredit() {
             toast.error("Đã có lỗi xảy ra.");
             console.log(err);
         })
+        setIsLoading(false);
     }; 
 
     const getListFlashcard = async (id:any) => {
@@ -243,7 +244,7 @@ export default function CreateCredit() {
                         }
                     })
 
-                    setValue("flashcardDTOs", listFlashCardDTO, { shouldTouch: true });
+                    setValue("flashcardDTOs", listFlashCardDTO);
                 }
             }
             else {
@@ -294,11 +295,87 @@ export default function CreateCredit() {
       );
     };
 
+    const handleUploadFile = async (e:any) => {
+        if (!e.target.files || e.target.files.length === 0) {
+            // setSelectedFile(undefined)
+            return
+        }
 
-    console.log(errors)
-    const onSubmit = async (data:any) => {
-        console.log(data);
+
+        // I've kept this example simple by using the first image instead of multiple
+        // setSelectedFile(e.target.files[0])
+
+        const formData = new FormData();
+        formData.append('fileImport', e.target.files[0]);
         
+        setIsLoading(true);
+        await Post(
+            "/api/Credit/import-file-flashcard", 
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        ).then(async (res) => {
+            if(CheckResponseSuccess(res) && res?.returnObj != "ERROR") {
+                let listFlashcard = res?.returnObj;
+                Swal.fire({
+                    icon: "success",
+                    title: "Import dữ liệu thành công",
+                    showConfirmButton: false,
+                    timer: 600,
+                });
+
+                if (listFlashcard) {
+                    console.log(listFlashcard)
+                    // setListFlashcard(flashcards);
+                    // setCurrentCard(flashcards[0]);
+                    // setCurrentIndex(0)
+                    listFlashcard.forEach((card:any) => {
+                        append(
+                            {
+                                flashcardId: card.flashcardId,
+                                question: card.question,
+                                answer: card.answer,
+                                // answerLang: card.answerLang,
+                                // questionLang: card.questionLang,
+                                // imageLink: card.image,
+                                imageFile: null
+                            }
+                        )
+                        return 
+                    })
+                    
+                    // toast.success('Tạo bộ thẻ thành công');
+                    // setValue("flashcardDTOs", listFlashCardDTO);
+                }
+
+                setOpen(false);
+            }
+            else {
+                Swal.fire({
+                    title: "Nhập bộ thẻ không thành công",
+                    text: "Điều này có thể xảy ra vì bạn đã tải lên file hoặc định dạng file không hợp lệ. Hãy kiểm tra file của bạn và thử lại",
+                    icon: "error",
+                    // showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    // cancelButtonColor: "#d33",
+                    // cancelButtonText: "Hủy",
+                    confirmButtonText: "Đóng"
+                })
+                setOpen(false);
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+        setIsLoading(false);
+    }
+
+
+    const onSubmit = async (data:any) => {
         setIsLoading(true);
 
         // await call api create
@@ -438,10 +515,66 @@ export default function CreateCredit() {
             <div className={`container-xxl flex-grow-1 container-p-y px-5`}>
                 <div className={styles.title}>
                     <h4 className={styles.name}>
-                        Tạo bộ thẻ mới
+                        {id ? "Chỉnh sửa bộ thẻ" : "Tạo bộ thẻ mới"}
                     </h4>
-                    <button type="button" className="btn btn-primary" onClick={handleSubmit(onSubmit)}>Lưu</button>
+                    <div>
+                        <button className='btn btn-info mx-2' onClick={() => setOpen(true)}>Nhập từ file</button>
+                        <button type="button" className="btn btn-primary" onClick={handleSubmit(onSubmit)}>Lưu</button>
+                    </div>
                 </div>
+
+                <BootstrapDialog
+                    onClose={() => setOpen(false)}
+                    aria-labelledby="customized-dialog-title"
+                    open={open}
+                    maxWidth={'sm'}
+                    fullWidth={true}
+                >
+                    <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                        Nhập bộ thẻ từ file
+                    </DialogTitle>
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => setOpen(false)}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+
+                    <DialogContent dividers>
+                        <div className={` ${styles.import_container}  d-flex justify-content-between row g-0 mb-5`}>
+                            <div className={styles.content}>
+                                Tải file của bạn lên để tạo bộ thẻ từ file excel một cách nhanh chóng và hiệu quả. 
+                                Hãy lưu ý rằng bộ thẻ của bạn phải có định dạng như file mẫu dưới đây
+                            </div>
+                            <a className={styles.link_template} href={TEMPLATE_CREATE_CREDIT}>
+                                Tải file mẫu
+                            </a>
+                        </div>
+
+                        <div className={styles.btn_upload}>
+                            <label htmlFor={`import_file`} className='btn btn-primary'>
+                                Chọn file
+                            </label>
+                            <input 
+                                type="file" 
+                                style={{display: 'none'}} 
+                                name='import_file'
+                                id='import_file'
+                                // value={}
+                                onChange={(e) => handleUploadFile(e)}
+                            />
+                        </div>
+                    </DialogContent>
+
+
+                    
+                </BootstrapDialog>
 
                 <form id="formCreate" className="mb-3" method="POST">
 
@@ -457,6 +590,7 @@ export default function CreateCredit() {
                                 fullWidth
                                 margin="dense"
                                 variant="outlined" 
+                                autoFocus
                                 size="small"
                                 {...register('name')}
                                 error={errors.name ? true : false}
@@ -546,6 +680,7 @@ export default function CreateCredit() {
 
                     <div className="d-flex justify-content-sm-end">
                         <button type="button" className="btn btn-primary" onClick={handleSubmit(onSubmit)}>Lưu</button>
+                        
                     </div>    
                 </form>
             </div>

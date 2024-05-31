@@ -28,7 +28,7 @@ function App() {
             } else if (item.layout === null) {
               Layout = NullLayout;
             }
-
+            console.log(isLoginUser)
             return <Route
               key={index}
               path={item.path}

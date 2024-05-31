@@ -208,4 +208,16 @@
     }
 }
 
-
+.category_container {
+    margin-top: -10px;
+    margin-bottom: 15px;
+    .category_item {
+        display: inline-block;
+        margin: 0px 5px;
+        background-color: #d8d8ef;
+        padding: 1px 7px;
+        border-radius: 10px;
+        color: #555555;
+        font-size: 14px;
+    }
+}

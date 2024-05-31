@@ -130,6 +130,7 @@ export default function Dashboard() {
                         <BoxCredit 
                             key={credit.creditId} 
                             credit={credit}
+                            showProgress={true}
                             // creditId={""} 
                             // name={""} 
                             // countFlashcard={0} 
@@ -148,7 +149,7 @@ export default function Dashboard() {
                 </div>
                 <div className="row mb-5">
                     {topCredit.map((credit: any) => (
-                        <BoxCredit key={credit.creditId} credit={credit}/>
+                        <BoxCredit key={credit.creditId} credit={credit} showProgress={false}/>
                     ))}
                     {/* <BoxCredit />
                     <BoxCredit />

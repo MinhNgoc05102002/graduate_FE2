@@ -8,7 +8,7 @@ import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
 import { BASE_URL_MEDIA, Post } from "~/services/axios";
 import { ICredit } from "~/types/ICredit";
-import { CheckResponseSuccess, GetIdFromCurrentPage, findNotifDate } from "~/utils/common";
+import { CheckResponseSuccess, GetIdFromCurrentPage, findNotifDate, handleSpeak } from "~/utils/common";
 
 // import required modules
 import LinearProgress from "@mui/material/LinearProgress";
@@ -32,6 +32,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioGroup, TextField } from "@mui/material";
 import { Preview } from "@mui/icons-material";
+import { ICategory } from "~/types/ICategory";
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
 
@@ -515,18 +516,18 @@ export default function Credit() {
         setIsLoading(false);
     }
 
-    const handleSpeak = (text:string) => {
-        let utterance = new SpeechSynthesisUtterance(text);
+    // const handleSpeak = (text:string) => {
+    //     let utterance = new SpeechSynthesisUtterance(text);
 
-        speechSynthesis.speak(utterance);
-    }
+    //     speechSynthesis.speak(utterance);
+    // }
 
     const Card = (props:{isFront:boolean, flashcard:IFlashcard|null}) => {
         return (
             <>
                 <div className={`card ${styles.box_padding} ${styles.flashcard_box}`}>
                     {props.isFront ? <div className={styles.audio_btn}>
-                        <button onClick={(e) => {e.stopPropagation(); handleSpeak(props?.flashcard?.question ?? '')}} type="button" className="btn rounded-pill btn-icon ">
+                        <button onClick={(e) => {e.stopPropagation(); handleSpeak(props?.flashcard?.question ?? '', props?.flashcard?.questionLang ?? 'en-US')}} type="button" className="btn rounded-pill btn-icon ">
                             <span className="bx bx-volume-full"></span>
                             {/* <span className="bx bx-volume-mute"></span> */}
                         </button>
@@ -605,7 +606,13 @@ export default function Credit() {
         <ToastContainer />
         <div className={`container-xxl flex-grow-1 container-p-y ${styles.container}`}>
             <h2 className="fw-bold">{credit?.name}</h2>
-
+            <div className={styles.category_container}>
+                {credit.categories.map((item:ICategory) => (
+                    <div key={item.categoryId} className={styles.category_item}>
+                        {item.name}
+                    </div>
+                ))}
+            </div>
             {isLearned ? 
             <>
                 {/* Btn chức năng học */}
@@ -633,7 +640,7 @@ export default function Credit() {
                                     // backStyle={style.card}
                                     // containerStyle={{position: 'absolute'}}
                                     containerCss={`${styles.flashcard} ${card.flashcardId != currentCard?.flashcardId ? styles.disable : "x"}`}
-                                    onClick={() => {handleSpeak(currentCard?.question ?? "")}}
+                                    onClick={() => {handleSpeak(currentCard?.question ?? "", currentCard?.questionLang ?? 'en-US')}}
                                     direction='vertical'
                                     flipTrigger="onClick"
                                     frontComponent={<Card isFront = {true} flashcard={currentCard}/>}

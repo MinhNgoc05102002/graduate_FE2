@@ -349,11 +349,11 @@ export default function Exam() {
         setPageSize(value);
     }
 
-    const handleSpeak = (text:string) => {
-        let utterance = new SpeechSynthesisUtterance(text);
+    // const handleSpeak = (text:string) => {
+    //     let utterance = new SpeechSynthesisUtterance(text);
 
-        speechSynthesis.speak(utterance);
-    }
+    //     speechSynthesis.speak(utterance);
+    // }
 
     const genListMultipleAns = (card:IFlashcard, listAllFlashCard:IFlashcard[]) => {
         let listAnsTemp = [];
@@ -416,7 +416,7 @@ export default function Exam() {
                         :    
                             <div className={styles.top_content}>
                                 Hãy điền thông tin bạn nghe được 
-                                <span onClick={() => handleSpeak(card?.question ?? '')} className={`bx bx-volume-full ${styles.audio_btn}`}></span>
+                                <span onClick={() => handleSpeak(card?.question ?? '', card.questionLang ?? 'en-US')} className={`bx bx-volume-full ${styles.audio_btn}`}></span>
                             </div>
                         }
                     </div>

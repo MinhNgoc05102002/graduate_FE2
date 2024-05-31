@@ -74,3 +74,18 @@
     font-size: 16px;
     font-weight: 600;
 }
+
+.unseen_container {
+    background-color: #f7f7fe;
+    .unseen {
+        background-color: #8789ff;
+        width: 9px;
+        height: 9px;
+        position: absolute;
+        // top: 0;
+        // left: 0;
+        right: 0;
+        bottom: 50%;
+        border-radius: 50px;
+    }
+}

@@ -17,6 +17,9 @@ export interface ICredit {
     name: string
     isLearned: boolean
     isReported: boolean
+    countLearned: number
+    countKnown: number
+    countGood: number
 }
 
 export interface IPropsModal {
@@ -27,4 +30,5 @@ export interface IPropsModal {
 
 export interface IProps {
     credit: ICredit;
+    showProgress: boolean;
 }

@@ -1,4 +1,40 @@
+import axios from "axios";
+import { Post } from "~/services/axios";
 
+export const TEMPLATE_CREATE_CREDIT = "https://localhost:7274/template_file/CreateNewCredit.xlsx"
+export const API_KEY = "AIzaSyDca5S6w9mja94QdnovJsZutNtYxg6gNZU"
+
+export async function handleSpeak(content:string, language:string, callbackError:any = null) {
+    await axios.post(
+        `https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=${API_KEY}`, 
+        {
+            "audioConfig": {
+                "audioEncoding": "LINEAR16",
+                "effectsProfileId": [
+                    "small-bluetooth-speaker-class-device"
+                ],
+                "pitch": 0,
+                "speakingRate": 1
+            },
+            "input": {
+                 "text": content
+            },
+            "voice": {
+                "languageCode": language, //"en-US",
+                "name": languages_voice[language] //"en-US-Standard-A"
+            }
+        }
+    ).then((res) => {
+        console.log(res)
+        const audioSrc = `data:audio/mp3;base64,${res.data.audioContent}`
+        let audio = new Audio(audioSrc);
+        audio.play();
+    })
+    .catch((err) => {
+        console.log(err);
+        if (callbackError) callbackError();
+    })
+}
 
 /**
  * validate request trả về
@@ -163,112 +199,52 @@ export function findNotifDate(date_notified = "2021-11-05 15:00:00", isTimeExam 
 
 export const countries2 = [
     {
-        key: "am-ET", 
-        label: "Amharic"
+        key: "vi-VN", 
+        label: "Vietnamese"
     },
     {
-        key: "ar-SA", 
+        key: "ar-XA", 
         label: "Arabic"
-    },
-    {
-        key: "be-BY", 
-        label: "Bielarus"
-    },
-    {
-        key: "bem-ZM", 
-        label: "Bemba"
-    },
-    {
-        key: "bi-VU", 
-        label: "Bislama"
-    },
-    {
-        key: "bjs-BB", 
-        label: "Bajan"
     },
     {
         key: "bn-IN", 
         label: "Bengali"
     },
     {
-        key: "bo-CN", 
-        label: "Tibetan"
-    },
-    {
-        key: "br-FR", 
-        label: "Breton"
-    },
-    {
-        key: "bs-BA", 
-        label: "Bosnian"
-    },
-    {
         key: "ca-ES", 
         label: "Catalan"
-    },
-    {
-        key: "cop-EG", 
-        label: "Coptic"
     },
     {
         key: "cs-CZ", 
         label: "Czech"
     },
     {
-        key: "cy-GB", 
-        label: "Welsh"
-    },
-    {
         key: "da-DK", 
         label: "Danish"
-    },
-    {
-        key: "dz-BT", 
-        label: "Dzongkha"
     },
     {
         key: "de-DE", 
         label: "German"
     },
     {
-        key: "dv-MV", 
-        label: "Maldivian"
-    },
-    {
         key: "el-GR", 
         label: "Greek"
     },
     {
+        key: "en-US", 
+        label: "English (US)"
+    },
+    {
         key: "en-GB", 
-        label: "English"
+        label: "English (UK)"
     },
     {
         key: "es-ES", 
         label: "Spanish"
     },
     {
-        key: "et-EE", 
-        label: "Estonian"
-    },
-    {
-        key: "eu-ES", 
-        label: "Basque"
-    },
-    {
-        key: "fa-IR", 
-        label: "Persian"
-    },
-    {
-        key: "fi-FI", 
-        label: "Finnish"
-    },
-    {
-        key: "fn-FNG", 
-        label: "Fanagalo"
-    },
-    {
-        key: "fo-FO", 
-        label: "Faroese"
+        key: "fil-PH", 
+        label: "Filipino"
     },
     {
         key: "fr-FR", 
@@ -283,20 +259,12 @@ export const countries2 = [
         label: "Gujarati"
     },
     {
-        key: "ha-NE", 
-        label: "Hausa"
-    },
-    {
         key: "he-IL", 
         label: "Hebrew"
     },
     {
         key: "hi-IN", 
         label: "Hindi"
-    },
-    {
-        key: "hr-HR", 
-        label: "Croatian"
     },
     {
         key: "hu-HU", 
@@ -307,24 +275,12 @@ export const countries2 = [
         label: "Indonesian"
     },
     {
-        key: "is-IS", 
-        label: "Icelandic"
-    },
-    {
         key: "it-IT", 
         label: "Italian"
     },
     {
         key: "ja-JP", 
         label: "Japanese"
-    },
-    {
-        key: "kk-KZ", 
-        label: "Kazakh"
-    },
-    {
-        key: "km-KM", 
-        label: "Khmer"
     },
     {
         key: "kn-IN", 
@@ -335,88 +291,12 @@ export const countries2 = [
         label: "Korean"
     },
     {
-        key: "ku-TR", 
-        label: "Kurdish"
-    },
-    {
-        key: "ky-KG", 
-        label: "Kyrgyz"
-    },
-    {
-        key: "la-VA", 
-        label: "Latin"
-    },
-    {
-        key: "lo-LA", 
-        label: "Lao"
-    },
-    {
         key: "lv-LV", 
         label: "Latvian"
     },
     {
-        key: "men-SL", 
-        label: "Mende"
-    },
-    {
-        key: "mg-MG", 
-        label: "Malagasy"
-    },
-    {
-        key: "mi-NZ", 
-        label: "Maori"
-    },
-    {
         key: "ms-MY", 
         label: "Malay"
-    },
-    {
-        key: "mt-MT", 
-        label: "Maltese"
-    },
-    {
-        key: "my-MM", 
-        label: "Burmese"
-    },
-    {
-        key: "ne-NP", 
-        label: "Nepali"
-    },
-    {
-        key: "niu-NU", 
-        label: "Niuean"
-    },
-    {
-        key: "nl-NL", 
-        label: "Dutch"
-    },
-    {
-        key: "no-NO", 
-        label: "Norwegian"
-    },
-    {
-        key: "ny-MW", 
-        label: "Nyanja"
-    },
-    {
-        key: "ur-PK", 
-        label: "Pakistani"
-    },
-    {
-        key: "pau-PW", 
-        label: "Palauan"
-    },
-    {
-        key: "pa-IN", 
-        label: "Panjabi"
-    },
-    {
-        key: "ps-PK", 
-        label: "Pashto"
-    },
-    {
-        key: "pis-SB", 
-        label: "Pijin"
     },
     {
         key: "pl-PL", 
@@ -427,10 +307,6 @@ export const countries2 = [
         label: "Portuguese"
     },
     {
-        key: "rn-BI", 
-        label: "Kirundi"
-    },
-    {
         key: "ro-RO", 
         label: "Romanian"
     },
@@ -439,47 +315,11 @@ export const countries2 = [
         label: "Russian"
     },
     {
-        key: "sg-CF", 
-        label: "Sango"
-    },
-    {
-        key: "si-LK", 
-        label: "Sinhala"
-    },
-    {
-        key: "sk-SK", 
-        label: "Slovak"
-    },
-    {
-        key: "sm-WS", 
-        label: "Samoan"
-    },
-    {
-        key: "sn-ZW", 
-        label: "Shona"
-    },
-    {
-        key: "so-SO", 
-        label: "Somali"
-    },
-    {
-        key: "sq-AL", 
-        label: "Albanian"
-    },
-    {
-        key: "sr-RS", 
-        label: "Serbian"
-    },
-    {
         key: "sv-SE", 
         label: "Swedish"
     },
     {
-        key: "sw-SZ", 
-        label: "Swahili"
-    },
-    {
-        key: "ta-LK", 
+        key: "ta-IN", 
         label: "Tamil"
     },
     {
@@ -487,70 +327,43 @@ export const countries2 = [
         label: "Telugu"
     },
     {
-        key: "tet-TL", 
-        label: "Tetum"
-    },
-    {
-        key: "tg-TJ", 
-        label: "Tajik"
-    },
-    {
         key: "th-TH", 
         label: "Thai"
     },
-    {
-        key: "ti-TI", 
-        label: "Tigrinya"
-    },
-    {
-        key: "tk-TM", 
-        label: "Turkmen"
-    },
-    {
-        key: "tl-PH", 
-        label: "Tagalog"
-    },
-    {
-        key: "tn-BW", 
-        label: "Tswana"
-    },
-    {
-        key: "to-TO", 
-        label: "Tongan"
-    },
-    {
-        key: "tr-TR", 
-        label: "Turkish"
-    },
-    {
-        key: "uk-UA", 
-        label: "Ukrainian"
-    },
-    {
-        key: "uz-UZ", 
-        label: "Uzbek"
-    },
-    {
-        key: "vi-VN", 
-        label: "Vietnamese"
-    },
-    {
-        key: "wo-SN", 
-        label: "Wolof"
-    },
-    {
-        key: "xh-ZA", 
-        label: "Xhosa"
-    },
-    {
-        key: "yi-YD", 
-        label: "Yiddish"
-    },
-    {
-        key: "zu-ZA", 
-        label: "Zulu"
-    }
 ]
+
+export const languages_voice:any = {
+    "vi-VN": "vi-VN-Neural2-A",
+    "ar-XA": "ar-XA-Standard-A",
+    "bn-IN": "bn-IN-Standard-A",
+    "ca-ES": "ca-ES-Standard-A",
+    "cs-CZ": "cs-CZ-Standard-A",
+    "da-DK": "da-DK-Standard-A",
+    "de-DE": "de-DE-Standard-A",
+    "el-GR": "de-DE-Standard-A",
+    "es-ES": "es-ES-Standard-A",
+    "fil-PH": "fil-PH-Standard-A",
+    "fr-FR": "fr-FR-Standard-A",
+    "gl-ES": "gl-ES-Standard-A",
+    "gu-IN": "gu-IN-Standard-A",
+    "he-IL": "he-IL-Standard-A",
+    "hi-IN": "hi-IN-Standard-A",
+    "hu-HU": "hu-HU-Standard-A",
+    "id-ID": "id-ID-Standard-A",
+    "ja-JP": "ja-JP-Standard-A",
+    "kn-IN": "kn-IN-Standard-A",
+    "ko-KR": "ko-KR-Standard-A",
+    "lv-LV": "lv-LV-Standard-A",
+    "ms-MY": "ms-MY-Standard-A",
+    "pl-PL": "pl-PL-Standard-A",
+    "pt-PT": "pt-PT-Standard-A",
+    "ro-RO": "pt-PT-Standard-A",
+    "ru-RU": "ru-RU-Standard-A",
+    "sv-SE": "sv-SE-Standard-A",
+    "ta-IN": "ta-IN-Standard-A",
+    "te-IN": "te-IN-Standard-A",
+    "th-TH": "th-TH-Standard-A",
+}
 
 export const countries = {
     "am-ET": "Amharic",

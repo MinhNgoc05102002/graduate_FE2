@@ -218,7 +218,28 @@ export default function Match() {
         console.log(listCard.length)
         return (
             <>
-                Phương pháp "Ghép thẻ hiện chỉ có hiệu lực với bộ thẻ có từ 6 flashcard trở lên"
+                
+                {/* // <!--Under Maintenance --> */}
+                <div className="container-xxl container-p-y m-5">
+                <div className="misc-wrapper" style={{minHeight: "calc(100vh - (8.625rem * 2))"}}>
+                    <h2 className="mb-2 mx-2">Phương pháp "Ghép thẻ hiện chỉ có hiệu lực với bộ thẻ có từ 6 flashcard trở lên"</h2>
+                    <p className="mb-4 mx-2">Chúng tôi rất tiếc vì sự bất tiện này</p>
+                    <button onClick={() => navigate(-1)} className="btn btn-primary">
+                        Quay lại
+                    </button>
+                    <div className="mt-4">
+                    <img
+                        src="/src/assets/img/illustrations/girl-doing-yoga-light.png"
+                        alt="girl-doing-yoga-light"
+                        width="500"
+                        className="img-fluid"
+                        data-app-dark-img="illustrations/girl-doing-yoga-dark.png"
+                        data-app-light-img="illustrations/girl-doing-yoga-light.png"
+                    />
+                    </div>
+                </div>
+                </div>
+                {/* // <!-- /Under Maintenance --> */}
             </>
         )
     }

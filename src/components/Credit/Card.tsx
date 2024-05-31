@@ -1,26 +1,27 @@
 import { IFlashcardProps } from "~/types/IFlash";
 import styles from "./CreditComponent.module.scss";
 import { BASE_URL_MEDIA } from "~/services/axios";
+import { handleSpeak } from "~/utils/common";
 
 // export default function Card (props:{flashcard:IFlashcardProps, index:string}) {
 export default function Card (props:IFlashcardProps) {
     const flashcard = props.flashcard;
 
-    function handleSpeak(text:string) {
-        let utterance = new SpeechSynthesisUtterance(text);
-        // utterance.lang = 'ja-JP';
-        // const voices = speechSynthesis.getVoices();
-        //     const vietnameseVoices = voices.filter(voice => voice.lang == 'ja-JP');
-        //     console.log(vietnameseVoices, voices);
+    // function handleSpeak(text:string) {
+    //     let utterance = new SpeechSynthesisUtterance(text);
+    //     // utterance.lang = 'ja-JP';
+    //     // const voices = speechSynthesis.getVoices();
+    //     //     const vietnameseVoices = voices.filter(voice => voice.lang == 'ja-JP');
+    //     //     console.log(vietnameseVoices, voices);
             
-        //     if (vietnameseVoices.length > 0) {
-        //         utterance.voice = vietnameseVoices[0];
-        //         console.log('ik');
+    //     //     if (vietnameseVoices.length > 0) {
+    //     //         utterance.voice = vietnameseVoices[0];
+    //     //         console.log('ik');
                 
-        //     }
+    //     //     }
 
-        speechSynthesis.speak(utterance);
-    }
+    //     speechSynthesis.speak(utterance);
+    // }
 
     return (
         <div className={`${styles.card_container} card row`}>
@@ -41,7 +42,7 @@ export default function Card (props:IFlashcardProps) {
                 }
             </div>
             <div className={`${styles.btn}`}>
-                <button onClick={() => handleSpeak(flashcard?.question)} type="button" className="btn rounded-pill btn-icon ">
+                <button onClick={() => handleSpeak(flashcard?.question, flashcard.questionLang)} type="button" className="btn rounded-pill btn-icon ">
                     <span className="bx bx-volume-full"></span>
                     {/* <span className="bx bx-volume-mute"></span> */}
                 </button>

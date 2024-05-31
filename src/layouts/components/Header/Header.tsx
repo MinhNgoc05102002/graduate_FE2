@@ -10,32 +10,13 @@ import styles from './Header.module.scss';
 import debounce from "lodash/debounce";
 import { IClass } from "~/types/IClass";
 import { ICredit } from "~/types/ICredit";
+import {HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
+import Swal from "sweetalert2";
 
 type noti = {
     LINK: string,
     ICON: string
 }
-
-// const NOTI_TYPE = {
-//     REPEAT_LEARN: {
-//         LINK: '/credit/',
-//         ICON: '/src/assets/img/icons/noti_icon_remind.png'
-//     },
-//     ADMIN_WARN: {
-//         LINK: "",
-//         ICON: '/src/assets/img/icons/noti_icon_warning.png'
-//     },
-//     CLASS_INFO: {
-//         LINK: '/class/',
-//         ICON: '/src/assets/img/icons/noti_icon_user.png'
-//     },
-//     CLASS_UPDATE: {
-//         LINK: '/class/',
-//         ICON: '/src/assets/img/icons/noti_icon_update.png'
-//     },
-// }
-
-// let x:"REPEAT_LEARN" | "ADMIN_WARN" | "CLASS_INFO" | "CLASS_UPDATE" = 'CLASS_UPDATE';
 
 const NOTI_TYPE = [
     {
@@ -90,12 +71,16 @@ const NOTI_TYPE = [
 function NotiItem(props: any) {
     // console.log(findNotifDate('2024-02-15T01:26:27.69'))
     const navigate = useNavigate();
-    const {noti} = props;
+    const {noti, callBackShowPopUp, callBackHandleSeen} = props;
 
     const handleNavigate = () => {
         let link = NOTI_TYPE.find(item => item.id === noti.notiType)?.link;
+        callBackHandleSeen(noti);
+        
         if (link) {
             navigate(link + noti.link);
+        } else {
+            callBackShowPopUp(noti.contentShow);
         }
     }
 
@@ -103,20 +88,22 @@ function NotiItem(props: any) {
     const noti_type = NOTI_TYPE.find(item => item.id === noti.notiType);
 
     return (
-        <li>
+        <li className={noti.seen ? '' : styles.unseen_container}>
             <a onClick={() =>  handleNavigate()} className="dropdown-item" href="#" style={{textWrap: 'wrap'}}>
-                <div className="d-flex">
+                <div className="d-flex" >
                     <div className="flex-shrink-0 me-3">
                         <div className="avatar">
                             <img src={noti_type?.icon} className="w-px-40 h-auto rounded-circle" />
                         </div>
                     </div>
-                    <div className="flex-grow-1">
-                        <span className="fw-semibold d-block">
+                    <div className="flex-grow-1 form-floating">
+                        <span className="fw-semibold d-block" style={{paddingRight: "10px"}}>
                             {noti_type?.prefix} {noti.contentShow}
                             <small className="text-muted"> {findNotifDate(noti.createdAt)}</small>
                         </span>
-                        
+                        {noti.seen ? '' : <div className={styles.unseen}>
+                                
+                        </div>}
                     </div>
                 </div>
             </a>
@@ -128,12 +115,13 @@ export default function Header() {
     const userData = useAppSelector(inforUser);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [listNoti, setListNoti] = useState([]);
+    const [listNoti, setListNoti] = useState<any>([]);
     const [searchText, setSearchText] = useState('');
     const [listResAccount, setListResAccount] = useState([]);
     const [listResClass, setListResClass] = useState<IClass[]>([]);
     const [listResCredit, setListResCredit] = useState<ICredit[]>([]);
     const debounceDropDown = useCallback(debounce((nextValue) => fetchAPISearch(nextValue), 600), [])
+    const [conn, setConnection] = useState<any>();
 
     useEffect(() => {
         const ps = new PerfectScrollbar('#scroll_noti', {
@@ -145,7 +133,35 @@ export default function Header() {
         });
 
         getNotification();
+
+        initSignalR();
     }, [])
+
+
+    const initSignalR = async () => {
+        try {
+            // initiate connection
+            const conn = (new HubConnectionBuilder())
+                            .withUrl(`${BASE_URL_MEDIA}/Noti`)
+                            .configureLogging(LogLevel.Information)
+                            .build();
+
+            // set up handler
+            conn.on("ReceiveNoti", (noti) => {
+                console.log("msg: ", noti);
+                console.log(listNoti);
+                setListNoti((prev:any) => [noti, ...prev])
+            })
+            await conn.start();
+            await conn.invoke("AddGroupBroadcast", userData?.username)
+
+            setConnection(conn);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    // const handleAddNoti()
 
     const handleLogout = () => {
         dispatch(logout())
@@ -182,11 +198,55 @@ export default function Header() {
         getListClass(inputSearch);
     }
 
+    const handleShowInfoLock = (msg:string) => {
+        Swal.fire({
+            title: "Thông báo",
+            text: `${msg} Hãy liên hệ với quản trị viên nếu bạn cần thêm thông tin.`,
+            icon: "warning",
+            // showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            // cancelButtonColor: "#d33",
+            // cancelButtonText: "Hủy",
+            confirmButtonText: "Đóng"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                
+            }
+        });
+    }
 
     const handleSearch = (e:any) => {
         let value = e.target.value;
         setSearchText(value);
         debounceDropDown(value);
+    }
+
+    const handleSeenNoti = (noti:any) => {
+        Post(
+            "/api/Noti/seen-noti", 
+            {
+                notiUpdateId: noti.notiId,
+                notiType: "Seen",
+                link: "",
+                username: "",
+                ortherInfo: "",
+                senderInfo: ""
+              }, 
+            // userData?.token ?? ""
+        ).then((res) => {
+            console.log('seen tin nhắn thành công');
+            let listNewNoti:any = listNoti.map((item:any) => {
+                if (item.notiId == noti.notiId) {
+                    item.seen = true;
+                }
+                return item;
+            });
+            setListNoti(listNewNoti);
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
     }
 
     const getListClass = (inputSearch:any) => {
@@ -292,7 +352,7 @@ export default function Header() {
                     <ul className="navbar-nav flex-row align-items-center ms-auto">
                         {/* <!-- Noti --> */}
                         <li className="nav-item navbar-dropdown dropdown-user dropdown">
-                            <a onClick={() => getNotification()} className="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown">
+                            <a /*onClick={() => getNotification()}*/ className="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown">
                                 {/* <div className="avatar">
                                     <button type="button" className="btn rounded-pill btn-icon btn-outline-primary">
                                         <span className="tf-icons bx bx-bell"></span>
@@ -306,7 +366,7 @@ export default function Header() {
                             </a>
                             <ul id="scroll_noti" className="dropdown-menu dropdown-menu-end w-px-500 h-px-350" style={{maxHeight: '350px', overflow: 'hidden'}}>
                                 {listNoti.map((noti:any) => (
-                                    <NotiItem key={noti.notiId} noti = {noti}/>
+                                    <NotiItem key={noti.notiId} noti = {noti} callBackShowPopUp={handleShowInfoLock} callBackHandleSeen={handleSeenNoti}/>
                                 ))}
                                 
                                 
@@ -358,7 +418,7 @@ export default function Header() {
                                     </a>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="#">
+                                    <a onClick={() => navigate(`/setting`)} className="dropdown-item" href="#">
                                         <i className="bx bx-cog me-2"></i>
                                         <span className="align-middle">Cài đặt</span>
                                     </a>

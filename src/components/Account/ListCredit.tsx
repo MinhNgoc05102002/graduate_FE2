@@ -5,9 +5,10 @@ import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../Loading/Index";
 import { useAppSelector } from "~/redux/hook";
-import { inforUser } from "~/redux/slices/authSlice";
+import { inforUser, logging } from "~/redux/slices/authSlice";
 import styles from "../../pages/account/Account.module.scss";
 import { ICredit } from "~/types/ICredit";
+import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
 
 function showDate(date_notified = "2021-11-05 15:00:00") {
     /**
@@ -30,6 +31,7 @@ function showDate(date_notified = "2021-11-05 15:00:00") {
 
     //Subtract the timestamps
     var calc = new Date(today - date_sent);
+    // var calc = new Date();
 
     //Prevent Extra 1 Hour
     calc.setHours( calc.getUTCHours() +0);
@@ -44,8 +46,8 @@ function showDate(date_notified = "2021-11-05 15:00:00") {
     let days_passed;
     let months_passed;
     let years_passed;
-
-     if(!(calcDate.includes('1-1-1970'))) {
+    
+     if((calcDate != '1-1-1970')) {
 
          days_passed = ((parseInt(date_passed[0]) - 1) != 0 ) ? 
          parseInt(date_passed[0]) - 1 : null;
@@ -73,10 +75,16 @@ export default function ListCredit(props:any) {
     const [search, setSearch] = useState("");
     const [pageIndex, setPageIndex] = useState(1);
     const [totalPage, setToTalPage] = useState(1);
+    const [showProgress, setShowProgress] = useState(false);
 
     useEffect(() => {
         if (userData?.token) {
             getListCredit();
+            console.log(userData.username)
+            if (username == userData.username) {
+                setShowProgress(true);
+            } 
+            else setShowProgress(false);
         }
     }, [userData?.token, username, pageIndex])
 
@@ -179,7 +187,7 @@ export default function ListCredit(props:any) {
                         </div>
                     : null}
 
-                    <BoxCreditAccount credit={credit} />
+                    <BoxCreditAccount credit={credit} showProgress={showProgress && type == "ACCOUNT"}/>
                 </div>)
             })}
             

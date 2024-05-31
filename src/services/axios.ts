@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { IResponse } from '~/types/IResponse';
-export const BASE_URL_MEDIA = 'https://localhost:7274'
+// export const BASE_URL_MEDIA = 'https://localhost:7274'
+export const BASE_URL_MEDIA = 'http://flash.runasp.net'
 
 const request = axios.create({
     baseURL: BASE_URL_MEDIA,

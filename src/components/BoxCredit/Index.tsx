@@ -11,7 +11,7 @@ import { BASE_URL_MEDIA } from "~/services/axios";
 // export default function BoxCredit(credit:ICredit) {
 
 export default function BoxCredit(props:IProps) {
-    const credit = props.credit;
+    const {credit, showProgress} = props;
     return (
         <>
             <Link to={`/credit/${credit.creditId}`} className="col-md-4">
@@ -39,6 +39,35 @@ export default function BoxCredit(props:IProps) {
                                     <span className="fw-semibold d-block">{credit?.createdBy}</span>
                                 </Link>
                             </div>
+
+                            {showProgress ? 
+                                <div className="progress mt-3" style={{height: "3px"}}>
+                                    <div
+                                        className="progress-bar bg-learned shadow-none"
+                                        role="progressbar"
+                                        style={{width: `${credit.countLearned*100/credit.countFlashcard}%`}}
+                                        aria-valuenow= {credit.countLearned}
+                                        aria-valuemin="0"
+                                        aria-valuemax={credit.countFlashcard}
+                                    ></div>
+                                    <div
+                                        className="progress-bar bg-known shadow-none"
+                                        role="progressbar"
+                                        style={{width: `${credit.countKnown*100/credit.countFlashcard}%`}}
+                                        aria-valuenow={credit.countKnown}
+                                        aria-valuemin="0"
+                                        aria-valuemax={credit.countFlashcard}
+                                    ></div>
+                                    <div
+                                        className="progress-bar bg-good shadow-none"
+                                        role="progressbar"
+                                        style={{width: `${credit.countGood*100/credit.countFlashcard}%`}}
+                                        aria-valuenow={credit.countGood}
+                                        aria-valuemin="0"
+                                        aria-valuemax={credit.countFlashcard}
+                                    ></div>
+                                </div>
+                            : null}
                         </div>
                     </div>
                 </div>

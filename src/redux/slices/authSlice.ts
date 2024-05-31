@@ -61,7 +61,8 @@ export const refreshToken = createAsyncThunk(
                 console.log(error);
                 localStorage.clear();
 
-                return error
+                return null;
+                // return error
             })
             return response;
         }
@@ -110,6 +111,7 @@ const authSlice = createSlice({
            })
            .addCase(refreshToken.fulfilled, (state, action: PayloadAction<IUser>) => {
                 state.logging = false
+                console.log('here ??')
                 if (action.payload) {
                     state.isLogin = true
                     state.userData = action.payload

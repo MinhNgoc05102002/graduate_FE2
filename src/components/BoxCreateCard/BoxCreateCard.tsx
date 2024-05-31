@@ -10,9 +10,10 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { styled } from '@mui/material/styles';
 import { LightTooltip } from '../Common';
 import { BASE_URL_MEDIA } from '~/services/axios';
+import { initial } from 'lodash';
 
 function DropDownLang(props:any) {
-    const {setValue, nameInput, initIndex} = props;
+    const {setValue, nameInput, initIndex, getValues} = props;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(initIndex ? initIndex : 0);
 
@@ -22,7 +23,15 @@ function DropDownLang(props:any) {
     };
 
     useEffect(() => {
-        setValue(nameInput,countries2[initIndex].key);
+        let languageSelected = countries2.find(c => c.key == getValues(nameInput));
+    
+        let currentIndex = initIndex;
+        if (languageSelected) {
+            currentIndex = countries2.indexOf(languageSelected);
+        }
+        setSelectedIndex(currentIndex);
+        setValue(nameInput,countries2[currentIndex].key);
+
     }, [initIndex]);
 
     const handleMenuItemClick = (
@@ -78,7 +87,7 @@ function DropDownLang(props:any) {
 }
 
 export default function BoxCreateCard(props:any) {
-    const {item, ordinal, register, setValue, errors, remove, previewInit} = props;
+    const {item, ordinal, register, setValue, getValues, errors, remove, previewInit} = props;
     const [selectedFile, setSelectedFile] =  useState();
     const [preview, setPreview] = useState('') 
     const myRef = useRef<any>();
@@ -158,8 +167,9 @@ export default function BoxCreateCard(props:any) {
                         />
                         <DropDownLang 
                             setValue={setValue} 
-                            initIndex= {19}
+                            initIndex= {9}
                             nameInput={`flashcardDTOs.${ordinal}.questionLang`}
+                            getValues={getValues}
                         />
 
                     </div>
@@ -178,7 +188,8 @@ export default function BoxCreateCard(props:any) {
                         <DropDownLang 
                             setValue={setValue} 
                             nameInput={`flashcardDTOs.${ordinal}.answerLang`}
-                            initIndex= {92}
+                            initIndex= {0}
+                            getValues={getValues}
                         />
                     </div>
                 </div>

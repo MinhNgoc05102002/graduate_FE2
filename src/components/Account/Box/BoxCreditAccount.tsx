@@ -4,7 +4,7 @@ import styles from "~/pages/account/Account.module.scss";
 import { BASE_URL_MEDIA } from "~/services/axios";
 
 export default function BoxCreditAccount(props:IProps) {
-    const credit = props.credit;
+    const {credit, showProgress=false} = props;
     
     return (
     <Link to={`/credit/${credit.creditId}`} className={`card mb-2 hoverable`}>
@@ -24,7 +24,35 @@ export default function BoxCreditAccount(props:IProps) {
             </div>
             
             <h5 style={{ marginBottom: '5px' }}>{credit.name}</h5>
-        </div>
+            {showProgress ? 
+                <div className="progress mt-3" style={{height: "3px"}}>
+                    <div
+                        className="progress-bar bg-learned shadow-none"
+                        role="progressbar"
+                        style={{width: `${credit.countLearned*100/credit.countFlashcard}%`}}
+                        aria-valuenow= {credit.countLearned}
+                        aria-valuemin="0"
+                        aria-valuemax={credit.countFlashcard}
+                    ></div>
+                    <div
+                        className="progress-bar bg-known shadow-none"
+                        role="progressbar"
+                        style={{width: `${credit.countKnown*100/credit.countFlashcard}%`}}
+                        aria-valuenow={credit.countKnown}
+                        aria-valuemin="0"
+                        aria-valuemax={credit.countFlashcard}
+                    ></div>
+                    <div
+                        className="progress-bar bg-good shadow-none"
+                        role="progressbar"
+                        style={{width: `${credit.countGood*100/credit.countFlashcard}%`}}
+                        aria-valuenow={credit.countGood}
+                        aria-valuemin="0"
+                        aria-valuemax={credit.countFlashcard}
+                    ></div>
+                </div>
+            : null}
+        </div> 
     </Link>
     )
 };
