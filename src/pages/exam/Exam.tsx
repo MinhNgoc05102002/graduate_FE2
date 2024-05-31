@@ -1,5 +1,3 @@
-// @ts-ignore
-import CanvasJSReact from "@canvasjs/react-charts";
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,6 +18,8 @@ import Swal from "sweetalert2";
 import { BootstrapDialog } from "~/components/Common";
 import { IFlashcard } from "~/types/IFlash";
 import NotFound from "../notfound/NotFound";
+// @ts-ignore
+import CanvasJSReact from "@canvasjs/react-charts";
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const QUESTION_TYPE = [
