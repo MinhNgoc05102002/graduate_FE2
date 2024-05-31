@@ -1,4 +1,3 @@
-import { Fetcher } from "swr";
 import request from "~/services/axios";
 import { IPosts } from "~/types/IBlog";
 

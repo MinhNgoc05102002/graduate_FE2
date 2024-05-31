@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
+import Checkbox from "@mui/material/Checkbox";
+import { useState } from "react";
 import { IPropsModal } from "~/types/ICredit";
 import styles from "./ModalAdd.module.scss";
-import { useState } from "react";
-import Checkbox from "@mui/material/Checkbox";
 
 export default function BoxFolderInModal(props:IPropsModal) {
     const checkInit = props.checked;

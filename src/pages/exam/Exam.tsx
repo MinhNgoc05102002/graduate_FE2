@@ -1,3 +1,4 @@
+// @ts-ignore
 import CanvasJSReact from "@canvasjs/react-charts";
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
@@ -7,21 +8,18 @@ import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
 import { Post } from "~/services/axios";
 import { ICredit } from "~/types/ICredit";
-import { CheckResponseSuccess, GetIdFromCurrentPage, findNotifDate } from "~/utils/common";
+import { CheckResponseSuccess, GetIdFromCurrentPage, findNotifDate, handleSpeak } from "~/utils/common";
 import styles from "./Exam.module.scss";
 
 // import required modules
-import LinearProgress from "@mui/material/LinearProgress";
+import { Checkbox, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
 import 'animate.css';
 import { useNavigate } from "react-router-dom";
-import ListCard from "~/components/Credit/Detail";
-import { IFlashcard } from "~/types/IFlash";
-import NotFound from "../notfound/NotFound";
 import Swal from "sweetalert2";
 import { BootstrapDialog } from "~/components/Common";
-import { Checkbox, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
-import { set } from "lodash";
+import { IFlashcard } from "~/types/IFlash";
+import NotFound from "../notfound/NotFound";
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const QUESTION_TYPE = [
@@ -284,7 +282,7 @@ export default function Exam() {
             // userData?.token ?? ""
         ).then( async (res) => {
             if(CheckResponseSuccess(res)) {
-                let id = document.getElementById('flip_card');
+                // let id = document.getElementById('flip_card');
                 
                 // next thẻ tiếp theo 
                 // if (currentIndex + 1 < listFlashcardLearn?.length) {

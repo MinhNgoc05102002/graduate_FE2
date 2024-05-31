@@ -321,7 +321,7 @@ export default function Classes() {
         await Promise.all([
             getListSelected(popup),
             getListAll(popup)
-        ]).then((response: any) => {
+        ]).then(() => {
             setOpen(true);
         });
     }
@@ -480,7 +480,7 @@ export default function Classes() {
                                     <input
                                         value={searchAll}
                                         onChange={(e) => setSearchAll(e.target.value)}
-                                        onBlur={(e) => handleSearch()}
+                                        onBlur={() => handleSearch()}
                                         type="text"
                                         className="form-control border-0 shadow-none"
                                         placeholder="Tìm kiếm..."
@@ -491,7 +491,7 @@ export default function Classes() {
                         </div>
                         <div className={styles.modal_credit}>
 
-                            {listAll.map((credit, index) => {
+                            {listAll.map((credit) => {
                                 let checked = listSelected.some((item:any) => item == credit?.[modalType.key])
                                 return (
                                     <div key={credit?.[modalType.key]}>

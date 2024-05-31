@@ -88,7 +88,7 @@ export default function ListClass(props:any) {
                         <input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            onBlur={(e) => handleSearch()}
+                            onBlur={() => handleSearch()}
                             type="text"
                             className="form-control border-0 shadow-none"
                             placeholder="Tìm kiếm..."
@@ -98,7 +98,7 @@ export default function ListClass(props:any) {
                 </div>
             </div>
 
-            {listClass.map((item, index) => {
+            {listClass.map((item) => {
                 // let lastTime = index > 0 ? showDate(listClass[index-1].createdAt) : ''
                 // let time = showDate(item.createdAt)
 

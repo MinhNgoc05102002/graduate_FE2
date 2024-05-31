@@ -1,7 +1,6 @@
+import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import styles from './Loading.module.scss';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 
 export default function Loading(props: any) {
     let {isLoading} = props;

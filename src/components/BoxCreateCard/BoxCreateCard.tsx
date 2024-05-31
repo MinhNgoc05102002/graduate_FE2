@@ -2,15 +2,11 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from "@mui/material/TextField";
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import React, { useEffect, useId, useRef, useState } from "react";
-import { countries2 } from "~/utils/common";
-import styles from "./BoxCreateCard.module.scss";
-import FormHelperText from '@mui/material/FormHelperText';
-import { styled } from '@mui/material/styles';
-import { LightTooltip } from '../Common';
+import React, { useEffect, useRef, useState } from "react";
 import { BASE_URL_MEDIA } from '~/services/axios';
-import { initial } from 'lodash';
+import { countries2 } from "~/utils/common";
+import { LightTooltip } from '../Common';
+import styles from "./BoxCreateCard.module.scss";
 
 function DropDownLang(props:any) {
     const {setValue, nameInput, initIndex, getValues} = props;
@@ -38,6 +34,7 @@ function DropDownLang(props:any) {
         event: React.MouseEvent<HTMLElement>,
         index: number,
     ) => {
+        console.log(event)
         setSelectedIndex(index);
         setAnchorEl(null);
         setValue(nameInput,countries2[index].key);
@@ -87,7 +84,7 @@ function DropDownLang(props:any) {
 }
 
 export default function BoxCreateCard(props:any) {
-    const {item, ordinal, register, setValue, getValues, errors, remove, previewInit} = props;
+    const {ordinal, register, setValue, getValues, errors, remove, previewInit} = props;
     const [selectedFile, setSelectedFile] =  useState();
     const [preview, setPreview] = useState('') 
     const myRef = useRef<any>();

@@ -4,10 +4,8 @@ import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
 import { Post } from "~/services/axios";
 import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
-import styles from "./ClassComp.module.scss";
-import Loading from "../Loading/Index";
-import { IClass } from "~/types/IClass";
 import BoxAccount from "./BoxAccount";
+import styles from "./ClassComp.module.scss";
 
 // truyền username của user đang đăng nhập vào đây
 export default function ListMember(props:any) {
@@ -84,7 +82,7 @@ export default function ListMember(props:any) {
                         <input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            onBlur={(e) => handleSearch()}
+                            onBlur={() => handleSearch()}
                             type="text"
                             className="form-control border-0 shadow-none"
                             placeholder="Tìm kiếm..."

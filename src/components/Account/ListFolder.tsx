@@ -3,9 +3,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
 import { Post } from "~/services/axios";
-import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
-import Loading from "../Loading/Index";
 import { IFolder } from "~/types/IFolder";
+import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
 import BoxFolderAccount from "./Box/BoxFolderAccount";
 
 // truyền username của user đang đăng nhập vào đây
@@ -68,33 +67,33 @@ export default function ListFolder(props:any) {
         setIsLoading(false);
     };
 
-    const getFolderByClass = async () => {
-        // dispatch(login(formLogin))
-        setIsLoading(true);
-        await Post(
-            "/api/Folder/get-folder-by-username", 
-            {
-                pageSize: 100,
-                pageIndex: 0,
-                searchText: search,
-                username: username
-            }, 
-            // userData?.token ?? ""
-        ).then((res) => {
-            if(CheckResponseSuccess(res)) {
-                let listFolder = res?.returnObj?.listResult;
-                setListFolder(listFolder);
-            }
-            else {
-                toast.error("Đã có lỗi xảy ra.");
-            }
-        })
-        .catch((err) => {
-            toast.error("Đã có lỗi xảy ra.");
-            console.log(err);
-        })
-        setIsLoading(false);
-    };
+    // const getFolderByClass = async () => {
+    //     // dispatch(login(formLogin))
+    //     setIsLoading(true);
+    //     await Post(
+    //         "/api/Folder/get-folder-by-username", 
+    //         {
+    //             pageSize: 100,
+    //             pageIndex: 0,
+    //             searchText: search,
+    //             username: username
+    //         }, 
+    //         // userData?.token ?? ""
+    //     ).then((res) => {
+    //         if(CheckResponseSuccess(res)) {
+    //             let listFolder = res?.returnObj?.listResult;
+    //             setListFolder(listFolder);
+    //         }
+    //         else {
+    //             toast.error("Đã có lỗi xảy ra.");
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         toast.error("Đã có lỗi xảy ra.");
+    //         console.log(err);
+    //     })
+    //     setIsLoading(false);
+    // };
 
     return (
         <>
@@ -102,7 +101,7 @@ export default function ListFolder(props:any) {
 
             <div className="mt-5">
 
-                {listFolder.map((folder, index) => {
+                {listFolder.map((folder) => {
                     return (
                     <div key={folder.folderId}>
                         <BoxFolderAccount folder={folder} />

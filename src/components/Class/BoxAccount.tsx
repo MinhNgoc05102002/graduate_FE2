@@ -1,8 +1,7 @@
-import classNames from "classnames/bind";
-import styles from "./ClassComp.module.scss";
 import { Link } from "react-router-dom";
-import { findNotifDate } from "~/utils/common";
 import { BASE_URL_MEDIA } from "~/services/axios";
+import { findNotifDate } from "~/utils/common";
+import styles from "./ClassComp.module.scss";
 
 /**
  * Box Account Dashboard

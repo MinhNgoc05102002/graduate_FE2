@@ -1,10 +1,7 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import Dialog from '@mui/material/Dialog';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { green } from '@mui/material/colors';
-import Dialog from '@mui/material/Dialog';
+import { styled } from '@mui/material/styles';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',

@@ -16,7 +16,7 @@ export default function Test() {
 
             // set up handler
             conn.on("ReceiveMessage", (username, msg) => {
-                console.log("msg: ", msg);                
+                console.log("msg: ", msg, username);                
             })
 
             await conn.start();

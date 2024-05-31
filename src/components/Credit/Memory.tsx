@@ -1,11 +1,8 @@
-import * as React from 'react';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import styles from './CreditComponent.module.scss';
 import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import * as React from 'react';
+import styles from './CreditComponent.module.scss';
 // import SendIcon from '@mui/icons-material/Send';
 
 const MEMORY2 = [
@@ -24,8 +21,8 @@ const MEMORY2 = [
 ];
 
 
-export default function SimpleListMenu(props:any) {
-    const memories = props.memories;
+export default function SimpleListMenu() {
+    // const memories = props.memories;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const open = Boolean(anchorEl);
@@ -37,6 +34,7 @@ export default function SimpleListMenu(props:any) {
         event: React.MouseEvent<HTMLElement>,
         index: number,
     ) => {
+        console.log(event)
         setSelectedIndex(index);
         setAnchorEl(null);
     };

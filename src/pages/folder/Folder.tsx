@@ -1,33 +1,29 @@
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import { MenuItem } from "@mui/material";
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Fab from "@mui/material/Fab";
+import IconButton from '@mui/material/IconButton';
 import Tooltip from "@mui/material/Tooltip";
+import { SxProps } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import BoxCreditAccount from "~/components/Account/Box/BoxCreditAccount";
+import Swal from 'sweetalert2';
+import BoxCredit from "~/components/BoxCredit/Index";
+import { BootstrapDialog, fabGreenStyle } from "~/components/Common";
 import Loading, { PopupMenu } from "~/components/Loading/Index";
+import BoxCreditInModal from "~/components/ModalAdd/BoxCreditInModal";
 import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
 import { BASE_URL_MEDIA, Post } from "~/services/axios";
 import { ICredit } from "~/types/ICredit";
-import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
-import styles from "./Folder.module.scss";
 import { IFolder } from "~/types/IFolder";
+import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
 import NotFound from "../notfound/NotFound";
-import BoxCredit from "~/components/BoxCredit/Index";
-import Fab from "@mui/material/Fab";
-import { SxProps } from "@mui/material/styles";
-import AddIcon from '@mui/icons-material/Add';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
-import { BootstrapDialog, fabGreenStyle } from "~/components/Common";
-import BoxCreditInModal from "~/components/ModalAdd/BoxCreditInModal";
-import { MenuItem } from "@mui/material";
-import Swal from 'sweetalert2';
+import styles from "./Folder.module.scss";
 
 export default function Folder() {
     const [isLoading, setIsLoading] = useState(false);
@@ -303,7 +299,7 @@ export default function Folder() {
                             <input
                                 value={search}
                                 onChange={(e) => {setSearch(e.target.value); setShowMsg(false)}}
-                                onBlur={(e) => {handleSearch(); setShowMsg(true);}}
+                                onBlur={() => {handleSearch(); setShowMsg(true);}}
                                 type="text"
                                 className="form-control border-0 shadow-none"
                                 placeholder="Tìm kiếm..."
@@ -362,7 +358,7 @@ export default function Folder() {
                                     <input
                                         value={searchAll}
                                         onChange={(e) => setSearchAll(e.target.value)}
-                                        onBlur={(e) => handleSearch()}
+                                        onBlur={() => handleSearch()}
                                         type="text"
                                         className="form-control border-0 shadow-none"
                                         placeholder="Tìm kiếm..."
@@ -373,7 +369,7 @@ export default function Folder() {
                         </div>
                         <div className={styles.modal_credit}>
 
-                            {listCreditAll.map((credit, index) => {
+                            {listCreditAll.map((credit) => {
                                 let checked = listCredit.some((item) => item.creditId == credit.creditId)
                                 return (
                                     <div key={credit.creditId}>
@@ -421,12 +417,12 @@ export default function Folder() {
 
 
                 <div className="row">
-                    {listCredit.map((credit, index) => {
+                    {listCredit.map((credit) => {
 
                         return (
                             <div className="col-6" key={credit.creditId}>
 
-                                <BoxCredit credit={credit} />
+                                <BoxCredit credit={credit} showProgress={false}/>
                                 {/* <BoxCreditAccount credit={credit} /> */}
                             </div>)
                     })}

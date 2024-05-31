@@ -117,19 +117,19 @@ export default function Sidebar() {
                         <span className="menu-header-text">Thêm mới</span>
                     </li>
                     <li className={`menu-item ${openSidebar == 'CREDIT' ? 'active': ''}`}>
-                        <Link to="/create-credit" className="menu-link" onClick={(e) =>  setOpenSidebar('CREDIT')}>
+                        <Link to="/create-credit" className="menu-link" onClick={() =>  setOpenSidebar('CREDIT')}>
                             <i className="menu-icon tf-icons bx bx-collection"></i>
                             <div data-i18n="Layouts">Bộ thẻ ghi nhớ</div>
                         </Link>
                     </li>
                     <li className={`menu-item ${openSidebar == 'FOLDER' ? 'active': ''}`}>
-                        <Link to={`/create-folder`} className="menu-link" onClick={(e) =>  setOpenSidebar('FOLDER')}>
+                        <Link to={`/create-folder`} className="menu-link" onClick={() =>  setOpenSidebar('FOLDER')}>
                             <i className='menu-icon tf-icons bx bx-folder' ></i>
                             <div data-i18n="Layouts">Thư mục</div>
                         </Link>
                     </li>
                     <li className={`menu-item ${openSidebar == 'CLASS' ? 'active': ''}`}>
-                        <Link to={`/create-class`} className="menu-link" onClick={(e) =>  setOpenSidebar('CLASS')}>
+                        <Link to={`/create-class`} className="menu-link" onClick={() =>  setOpenSidebar('CLASS')}>
                             <i className="menu-icon tf-icons bx bx-cube-alt"></i>
                             <div data-i18n="Layouts">Lớp học</div>
                         </Link>

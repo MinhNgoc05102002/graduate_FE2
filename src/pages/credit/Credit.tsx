@@ -1,3 +1,4 @@
+// @ts-ignore
 import CanvasJSReact from "@canvasjs/react-charts";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,28 +12,26 @@ import { ICredit } from "~/types/ICredit";
 import { CheckResponseSuccess, GetIdFromCurrentPage, findNotifDate, handleSpeak } from "~/utils/common";
 
 // import required modules
+import { yupResolver } from '@hookform/resolvers/yup';
+import CloseIcon from '@mui/icons-material/Close';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from "@mui/material/Tooltip";
 import 'animate.css';
+import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import * as Yup from 'yup';
+import { BootstrapDialog } from "~/components/Common";
 import ListCard from "~/components/Credit/Detail";
+import { ICategory } from "~/types/ICategory";
 import { IFlashcard } from "~/types/IFlash";
 import NotFound from "../notfound/NotFound";
-import { BootstrapDialog, fabGreenStyle } from "~/components/Common";
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import * as Yup from 'yup';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioGroup, TextField } from "@mui/material";
-import { Preview } from "@mui/icons-material";
-import { ICategory } from "~/types/ICategory";
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
 
@@ -82,11 +81,11 @@ const REPORT_REASON = [
     },
 ]
 
-const MEMORY = [
-    'Trí nhớ 1 ngày',
-    'Trí nhớ 1 tuần',
-    'Trí nhớ 1 tháng',
-  ];
+// const MEMORY = [
+//     'Trí nhớ 1 ngày',
+//     'Trí nhớ 1 tuần',
+//     'Trí nhớ 1 tháng',
+//   ];
 
 export default function Credit() {
     const userData = useAppSelector(inforUser);
@@ -122,10 +121,10 @@ export default function Credit() {
         control,
         handleSubmit,
         reset,
-        watch,
-        getValues,
-        setValue,
-        setError,
+        // watch,
+        // getValues,
+        // setValue,
+        // setError,
         formState: { errors }
       } = useForm({
         defaultValues: {

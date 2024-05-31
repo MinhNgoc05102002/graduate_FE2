@@ -1,7 +1,7 @@
-import { ICredit, IProps } from "~/types/ICredit";
-import styles from "./BoxCredit.module.scss";
 import { Link } from "react-router-dom";
 import { BASE_URL_MEDIA } from "~/services/axios";
+import { IProps } from "~/types/ICredit";
+import styles from "./BoxCredit.module.scss";
 /**
  * Box Credit Dashboard
  * @returns 
@@ -47,7 +47,7 @@ export default function BoxCredit(props:IProps) {
                                         role="progressbar"
                                         style={{width: `${credit.countLearned*100/credit.countFlashcard}%`}}
                                         aria-valuenow= {credit.countLearned}
-                                        aria-valuemin="0"
+                                        aria-valuemin={0}
                                         aria-valuemax={credit.countFlashcard}
                                     ></div>
                                     <div
@@ -55,7 +55,7 @@ export default function BoxCredit(props:IProps) {
                                         role="progressbar"
                                         style={{width: `${credit.countKnown*100/credit.countFlashcard}%`}}
                                         aria-valuenow={credit.countKnown}
-                                        aria-valuemin="0"
+                                        aria-valuemin={0}
                                         aria-valuemax={credit.countFlashcard}
                                     ></div>
                                     <div
@@ -63,7 +63,7 @@ export default function BoxCredit(props:IProps) {
                                         role="progressbar"
                                         style={{width: `${credit.countGood*100/credit.countFlashcard}%`}}
                                         aria-valuenow={credit.countGood}
-                                        aria-valuemin="0"
+                                        aria-valuemin={0}
                                         aria-valuemax={credit.countFlashcard}
                                     ></div>
                                 </div>

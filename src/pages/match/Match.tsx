@@ -81,7 +81,7 @@ export default function Match() {
         await Promise.all([
             getInfoCredit(),
             getListFlashcardLearned(),
-        ]).then((response: any) => {
+        ]).then(() => {
             // if (isEditMode) saveDataEdit(response[0], response[1], response[2], response[3]);
 
             // setListFlashcardLearn(response[1]);

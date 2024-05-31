@@ -1,7 +1,6 @@
-import classNames from "classnames/bind";
-import styles from "./BoxAccount.module.scss";
 import { Link } from "react-router-dom";
 import { BASE_URL_MEDIA } from "~/services/axios";
+import styles from "./BoxAccount.module.scss";
 
 /**
  * Box Account Dashboard

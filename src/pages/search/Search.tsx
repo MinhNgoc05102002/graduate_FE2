@@ -45,7 +45,6 @@ export default function Search() {
     const [currentUser, setCurrentUser] = useState<IUser|null>(null);
     const userData = useAppSelector(inforUser);
     const username = GetIdFromCurrentPage();
-    const navigate = useNavigate();
 
     const [searchText, setSearchText] = useState('');
     const params= useParams();
@@ -162,6 +161,7 @@ function ListResultSearch(props:{searchText:string|undefined, type: string, api:
                         // key={credit.creditId} 
                         key={Math.random()}
                         credit={credit}
+                        showProgress={false}
                     />
                 )) : null}
 

@@ -6,7 +6,7 @@ import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
 import { Post } from "~/services/axios";
 import { ICredit } from "~/types/ICredit";
-import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
+import { CheckResponseSuccess, GetIdFromCurrentPage, handleSpeak } from "~/utils/common";
 
 // import required modules
 import LinearProgress from "@mui/material/LinearProgress";
@@ -93,7 +93,7 @@ export default function Learn() {
         await Promise.all([
             getInfoCredit(),
             getListFlashcardLearned(),
-        ]).then((response: any) => {
+        ]).then(() => {
             // if (isEditMode) saveDataEdit(response[0], response[1], response[2], response[3]);
 
             // setListFlashcardLearn(response[1]);

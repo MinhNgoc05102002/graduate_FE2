@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react"
-import BoxCreditAccount from "./Box/BoxCreditAccount";
-import { Post } from "~/services/axios";
-import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import Loading from "../Loading/Index";
 import { useAppSelector } from "~/redux/hook";
-import { inforUser, logging } from "~/redux/slices/authSlice";
-import styles from "../../pages/account/Account.module.scss";
+import { inforUser } from "~/redux/slices/authSlice";
+import { Post } from "~/services/axios";
 import { ICredit } from "~/types/ICredit";
-import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
+import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
+import styles from "../../pages/account/Account.module.scss";
+import BoxCreditAccount from "./Box/BoxCreditAccount";
 
 function showDate(date_notified = "2021-11-05 15:00:00") {
     /**
@@ -38,11 +36,11 @@ function showDate(date_notified = "2021-11-05 15:00:00") {
 
     //Make our result readable
     var calcDate = calc.getDate()+'-'+(calc.getMonth()+1)+'-'+calc.getFullYear();
-    var calcTime = calc.getHours()+':'+calc.getMinutes()+':'+calc.getSeconds();
+    // var calcTime = calc.getHours()+':'+calc.getMinutes()+':'+calc.getSeconds();
 
     //Get How many days, months and years that has passed
     var date_passed = calcDate.split("-");
-    var time_passed = calcTime.split(":");
+    // var time_passed = calcTime.split(":");
     let days_passed;
     let months_passed;
     let years_passed;
@@ -163,7 +161,7 @@ export default function ListCredit(props:any) {
                         <input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            onBlur={(e) => handleSearch()}
+                            onBlur={() => handleSearch()}
                             type="text"
                             className="form-control border-0 shadow-none"
                             placeholder="Tìm kiếm..."

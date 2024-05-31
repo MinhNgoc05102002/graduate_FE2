@@ -1,4 +1,3 @@
-import { IFolder } from "./IFolder"
 
 export interface ICredit {
     avatar: string

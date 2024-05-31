@@ -1,8 +1,6 @@
-import { ICredit, IProps } from "~/types/ICredit";
-import styles from "./CreditComponent.module.scss";
-import { Link } from "react-router-dom";
-import { IFlashcard, IFlashcardProps } from "~/types/IFlash";
+import { IFlashcard } from "~/types/IFlash";
 import Card from "./Card";
+import styles from "./CreditComponent.module.scss";
 
 const LIST_LEARN = [
     {

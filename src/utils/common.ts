@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Post } from "~/services/axios";
 
 export const TEMPLATE_CREATE_CREDIT = "https://localhost:7274/template_file/CreateNewCredit.xlsx"
 export const API_KEY = "AIzaSyDca5S6w9mja94QdnovJsZutNtYxg6gNZU"

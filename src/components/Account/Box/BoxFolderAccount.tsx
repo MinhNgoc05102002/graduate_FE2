@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { IFolder, IProps } from "~/types/IFolder";
 import styles from "~/pages/account/Account.module.scss";
+import { IProps } from "~/types/IFolder";
 
 export default function BoxFolderAccount(props:IProps) {
     const folder = props.folder;

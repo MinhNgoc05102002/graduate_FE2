@@ -13,10 +13,6 @@ import { ICredit } from "~/types/ICredit";
 import {HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
 import Swal from "sweetalert2";
 
-type noti = {
-    LINK: string,
-    ICON: string
-}
 
 const NOTI_TYPE = [
     {
@@ -233,7 +229,7 @@ export default function Header() {
                 senderInfo: ""
               }, 
             // userData?.token ?? ""
-        ).then((res) => {
+        ).then(() => {
             console.log('seen tin nhắn thành công');
             let listNewNoti:any = listNoti.map((item:any) => {
                 if (item.notiId == noti.notiId) {
