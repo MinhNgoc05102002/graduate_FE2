@@ -1,7 +1,8 @@
 import { IFlashcardProps } from "~/types/IFlash";
 import styles from "./CreditComponent.module.scss";
-import { BASE_URL_MEDIA } from "~/services/axios";
-import { handleSpeak } from "~/utils/common";
+import { BASE_URL_MEDIA, Post } from "~/services/axios";
+import { CheckResponseSuccess, handleSpeak } from "~/utils/common";
+import { toast } from "react-toastify";
 
 // export default function Card (props:{flashcard:IFlashcardProps, index:string}) {
 export default function Card (props:IFlashcardProps) {
@@ -22,6 +23,27 @@ export default function Card (props:IFlashcardProps) {
 
     //     speechSynthesis.speak(utterance);
     // }
+
+    async function handleSave (flashcardId:string) {
+        await Post(
+            "/api/Flashcard/save-flashcard", 
+            {
+                flashcardId: flashcardId,
+            }, 
+            // userData?.token ?? ""
+        ).then((res) => {
+            if(CheckResponseSuccess(res)) {
+                toast.success("Đã thêm thẻ vào mục đã lưu");
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+    }
 
     return (
         <div className={`${styles.card_container} card row`}>
@@ -44,7 +66,9 @@ export default function Card (props:IFlashcardProps) {
             <div className={`${styles.btn}`}>
                 <button onClick={() => handleSpeak(flashcard?.question, flashcard.questionLang)} type="button" className="btn rounded-pill btn-icon ">
                     <span className="bx bx-volume-full"></span>
-                    {/* <span className="bx bx-volume-mute"></span> */}
+                </button>
+                <button onClick={() => handleSave(flashcard?.flashcardId)} type="button" className="btn rounded-pill btn-icon ">
+                    <span className="bx bx-bookmark"></span>
                 </button>
             </div>
         </div>

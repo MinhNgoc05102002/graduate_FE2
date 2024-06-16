@@ -295,7 +295,7 @@ export default function Match() {
                     {/* <div className={styles.btn}>
                         <span className={styles.btn_text}>Tùy chọn</span>
                     </div> */}
-                    <div onClick={() => navigate(`/credit/${credit.creditId}`)} className={styles.btn}>
+                    <div onClick={() => {credit.createdBy == "SYSTEM" ? navigate(`/saved`) : navigate(`/credit/${credit.creditId}`)}} className={styles.btn}>
                         <span className='bx bx-x'></span>
                     </div>
                 </div>

@@ -14,6 +14,7 @@ import Learn from "~/pages/learn/Learn"
 import Maintain from "~/pages/maintain/Maintain"
 import Match from "~/pages/match/Match"
 import Register from "~/pages/register/index"
+import Saved from "~/pages/saved/saved"
 import Search from "~/pages/search/Search"
 import Setting from "~/pages/settingpage/Setting"
 import Test from "~/pages/test/Test"
@@ -146,6 +147,11 @@ export const PRIVATE_ROUTER = [
     {
         path:"/maintain",
         page: Maintain,
+        layout: DefaultLayout
+    },
+    {
+        path:"/saved",
+        page: Saved,
         layout: DefaultLayout
     },
     // {

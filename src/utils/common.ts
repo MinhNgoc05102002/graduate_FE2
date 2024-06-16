@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const TEMPLATE_CREATE_CREDIT = "https://localhost:7274/template_file/CreateNewCredit.xlsx"
-export const API_KEY = "AIzaSyDca5S6w9mja94QdnovJsZutNtYxg6gNZU"
+export const API_KEY = "AIzaSyBTwoWQXr6snm1TGVjFmZPUIc1szSo_32o"
 
 export async function handleSpeak(content:string, language:string, callbackError:any = null) {
     await axios.post(

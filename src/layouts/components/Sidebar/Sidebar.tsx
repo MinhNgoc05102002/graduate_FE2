@@ -193,6 +193,13 @@ export default function Sidebar() {
                         <span className="menu-header-text">Tài khoản</span>
                     </li>
                     {/* <!-- User interface --> */}
+                    <li className={`menu-item ${openSidebar == 'SAVED' ? 'active': ''}`}>
+                        <Link to={`/saved`} className="menu-link" onClick={() => {setOpenSidebar('SAVED'); setActiveTab('none'); setOpenItem('');}}>
+                            <i className="menu-icon tf-icons bx bx-bookmark"></i>
+                            <div data-i18n="User interface">Thẻ đã lưu</div>
+                        </Link>
+                    </li>
+                    {/* <!-- User interface --> */}
                     <li className={`menu-item ${openSidebar == 'ACCOUNT' ? 'active': ''}`}>
                         <Link to={`/account/${userData?.username}`} className="menu-link" onClick={() => {setOpenSidebar('ACCOUNT'); setActiveTab('none'); setOpenItem('');}}>
                             <i className="menu-icon tf-icons bx bx-box"></i>

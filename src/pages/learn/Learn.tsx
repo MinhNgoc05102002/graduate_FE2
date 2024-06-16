@@ -137,7 +137,7 @@ export default function Learn() {
             {
                 // username: userData?.username,
                 // creditId: creditId
-                pageSize: 10,
+                pageSize: 5,
                 pageIndex: 0,
                 username: userData?.username,
                 containerId: creditId
@@ -347,7 +347,7 @@ export default function Learn() {
                     {/* <div className={styles.btn}>
                         <span className={styles.btn_text}>Tùy chọn</span>
                     </div> */}
-                    <div onClick={() => navigate(`/credit/${credit.creditId}`)} className={styles.btn}>
+                    <div onClick={() => {credit.createdBy == "SYSTEM" ? navigate(`/saved`) : navigate(`/credit/${credit.creditId}`)}} className={styles.btn}>
                         <span className='bx bx-x'></span>
                     </div>
                 </div>

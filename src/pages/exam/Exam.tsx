@@ -344,6 +344,9 @@ export default function Exam() {
         if (value > maxPageSize) {
             value = maxPageSize;
         }
+        if (value < 1) {
+            value = 1;
+        }
         setPageSize(value);
     }
 
@@ -631,7 +634,7 @@ export default function Exam() {
                     <div className={styles.btn} onClick={() => setOpenModal(true)}>
                         <span className={styles.btn_text}>Tùy chọn</span>
                     </div>
-                    <div onClick={() => navigate(`/credit/${credit.creditId}`)} className={styles.btn}>
+                    <div onClick={() => {credit.createdBy == "SYSTEM" ? navigate(`/saved`) : navigate(`/credit/${credit.creditId}`)}} className={styles.btn}>
                         <span className='bx bx-x'></span>
                     </div>
                 </div>

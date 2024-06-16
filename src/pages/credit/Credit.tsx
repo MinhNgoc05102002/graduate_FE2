@@ -173,6 +173,9 @@ export default function Credit() {
                 if (credit) {
                     setCredit(credit);
                     setIsLearned(credit.isLearned);
+                    if (credit.createdBy == "SYSTEM") {
+                        navigate('/saved')
+                    }
                 }
             }
             else {
@@ -639,7 +642,8 @@ export default function Credit() {
                                     // backStyle={style.card}
                                     // containerStyle={{position: 'absolute'}}
                                     containerCss={`${styles.flashcard} ${card.flashcardId != currentCard?.flashcardId ? styles.disable : "x"}`}
-                                    onClick={() => {handleSpeak(currentCard?.question ?? "", currentCard?.questionLang ?? 'en-US')}}
+                                    // speak khi lật thẻ
+                                    // onClick={() => {handleSpeak(currentCard?.question ?? "", currentCard?.questionLang ?? 'en-US')}}
                                     direction='vertical'
                                     flipTrigger="onClick"
                                     frontComponent={<Card isFront = {true} flashcard={currentCard}/>}
